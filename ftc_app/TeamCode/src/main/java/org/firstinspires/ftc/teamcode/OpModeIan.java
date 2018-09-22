@@ -23,7 +23,7 @@ public class OpModeIan extends LinearOpMode {
 
         while(opModeIsActive()) {
             DriveUtils.getInstance().driveForward(100);
-            DriveUtils.getInstance().driveBackward(100);
+            DriveUtils.getInstance().turnRight(90);
         }
     }
 }
