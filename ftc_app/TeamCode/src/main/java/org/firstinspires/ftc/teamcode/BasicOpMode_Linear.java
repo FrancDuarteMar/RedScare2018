@@ -124,18 +124,90 @@ public class BasicOpMode_Linear extends LinearOpMode {
         */
 
 
-      // turn(90);// run until the end of the match (driver presses STOP)
+      //turn(TYPE I DEGREES;
+        //driveForward(TYPE IN CENTIMETERS);
 
+
+        //The following is for the crater beginning. Right and left is relative to the robot not an outside perspective.
+
+        //drive for right; start at crater
+
+        /*
+        turn(45);
+        driveForward(62);
+        driveBackward(-62);
+        turn(-35); //end of right specific code
+        driveForward(35);
+        turn(-80);
+        driveForward(120);
+        turn(-45);
+        driveForward(130);
+        driveBackward(-200);
+        */
+
+        //drive for middle; start at crater
+        //working
+
+        driveForward(62);
+        driveBackward(-62); //end of middle specific code
+        driveForward(35);
+        turn(-80);
+        driveForward(120);
+        turn(-45);
+        driveForward(130);
+        driveBackward(-200);
+
+        //drive for left; start at crater
+
+        /*
+        turn(-45);
+        driveForward(62);
+        driveBackward(-62);
+        turn(-35);
+        driveForward(35); //end of the left specific code
+        turn(-80);
+        driveForward(120);
+        turn(-45);
+        driveForward(130);
+        driveBackward(-200);
+
+        */
+
+
+        //Beginning of depot start. Left and right is relative to robot.
+
+        //drive for right, start at depot
+
+       /* turn(45);
+        driveForward(64);
+        turn(-45);
+        driveForward();
+        */
     }
 
     public void driveForward(double distance){
         distance = 33.3333 * distance;
         while(frontLeftMotor.getCurrentPosition() < distance && frontRightMotor.getCurrentPosition() < distance){
 
-            frontRightMotor.setPower(.5);
-            backRightMotor.setPower(.5);
-            frontLeftMotor.setPower(.5);
-            backLeftMotor.setPower(.5);
+            frontRightMotor.setPower(.75);
+            backRightMotor.setPower(.75);
+            frontLeftMotor.setPower(.75);
+            backLeftMotor.setPower(.75);
+        }
+        frontRightMotor.setPower(0);
+        backRightMotor.setPower(0);
+        frontLeftMotor.setPower(0);
+        backLeftMotor.setPower(0);
+        reset();
+    }
+    public void driveBackward(double distance){
+        distance = 33.3333 * distance;
+        while(frontLeftMotor.getCurrentPosition() > distance && frontRightMotor.getCurrentPosition() > distance){
+
+            frontRightMotor.setPower(-.75);
+            backRightMotor.setPower(-.75);
+            frontLeftMotor.setPower(-.75);
+            backLeftMotor.setPower(-.75);
         }
         frontRightMotor.setPower(0);
         backRightMotor.setPower(0);
@@ -185,7 +257,7 @@ public class BasicOpMode_Linear extends LinearOpMode {
     /*public void height(double degrees){
         degrees = 9.5 * degrees;
         if(degrees > 0) {
-            while (craneMotor.getCurrentPosition() < degrees) {
+            while (craneMotor.AgetCurrentPosition() < degrees) {
 
                 craneMotor.setPower(-.35);
 
@@ -216,4 +288,7 @@ public class BasicOpMode_Linear extends LinearOpMode {
 //1000 ticks = 30cm
 //1000/30= 33.33
 //90 degrees = 950 ticks
-//
+
+//turn 90 = right
+//turn -90 = left
+//driveBackward needs negative
