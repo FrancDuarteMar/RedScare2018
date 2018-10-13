@@ -32,21 +32,8 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
-
-
-/**
- * This file contains an minimal example of a Linear "OpMode". An OpMode is a 'program' that runs in either
- * the autonomous or the teleop period of an FTC match. The names of OpModes appear on the menu
- * of the FTC Driver Station. When an selection is made from the menu, the corresponding OpMode
- * class is instantiated on the Robot Controller and executed.
- *
- * This particular OpMode just executes a basic Tank Drive Teleop for a two wheeled robot
- * It includes all the skeletal structure that all linear OpModes contain.
- *
- * Use Android Studios to Copy this Class, and Paste it into your team's code folder with a new name.
- * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
- */
 
 @Autonomous(name="Basic: Linear OpMode", group="Linear Opmode")
 
@@ -57,6 +44,7 @@ public class BasicOpMode_Linear extends LinearOpMode {
     private DcMotor backLeftMotor = null;
     private DcMotor backRightMotor = null;
     private DcMotor craneMotor = null;
+    private Servo servoMain = null;
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
 
@@ -71,6 +59,7 @@ public class BasicOpMode_Linear extends LinearOpMode {
         backLeftMotor = hardwareMap.get(DcMotor.class, "Back left motor");
         backRightMotor = hardwareMap.get(DcMotor.class, "Back right motor");
         craneMotor = hardwareMap.get(DcMotor.class, "craneMotor");
+        servoMain = hardwareMap.get(Servo.class, "servoMain");
 
         frontLeftMotor.setDirection(DcMotor.Direction.REVERSE);
         backLeftMotor.setDirection(DcMotor.Direction.REVERSE);
@@ -132,11 +121,11 @@ public class BasicOpMode_Linear extends LinearOpMode {
 
         //drive for right; start at crater
 
-        /*
+      /*
         turn(45);
         driveForward(62);
         driveBackward(-62);
-        turn(-35); //end of right specific code
+        turn(-45); //end of right specific code
         driveForward(35);
         turn(-80);
         driveForward(120);
@@ -148,42 +137,94 @@ public class BasicOpMode_Linear extends LinearOpMode {
         //drive for middle; start at crater
         //working
 
-        driveForward(62);
+
+      /*  driveForward(62);
         driveBackward(-62); //end of middle specific code
         driveForward(35);
         turn(-80);
         driveForward(120);
         turn(-45);
         driveForward(130);
+        servoMain.setPosition(-1);
         driveBackward(-200);
+*/
 
+/*
         //drive for left; start at crater
 
-        /*
-        turn(-45);
+//test to see if code is working
+        turn(-35);
         driveForward(62);
         driveBackward(-62);
-        turn(-35);
+        turn(35);
         driveForward(35); //end of the left specific code
         turn(-80);
         driveForward(120);
         turn(-45);
         driveForward(130);
         driveBackward(-200);
+*/
 
-        */
-
+lift(2);
+drop(-2);
 
         //Beginning of depot start. Left and right is relative to robot.
 
-        //drive for right, start at depot
-
-       /* turn(45);
-        driveForward(64);
-        turn(-45);
-        driveForward();
+        //drive for center, start at depot
+/*
+        driveForward(62);
+        driveForward(60);
+        turn(45);
+        driveForward(200);
         */
+
+        //drive for right, start at depot
+/*
+        turn(45);
+        driveForward(35);
+        turn(-45);
+        driveForward(45);
+        turn(45);
+        driveForward(200);
+*/
+
+        //drive for left, start at depot
+
+       /*
+        turn(-45);
+
+        driveForward(35);
+        turn(45);
+        driveForward(45);
+        turn(45);
+        driveForward(220);
+
+*/
     }
+
+    public void drop(double drop){
+        drop = 20.83125 * drop;
+        while(frontLeftMotor.getCurrentPosition() < drop && craneMotor.getCurrentPosition() < drop){
+
+            craneMotor.setPower(-.75);
+
+        }
+        craneMotor.setPower(0);
+        reset();
+    }
+
+
+    public void lift(double lift){
+        lift = 20.83125 * lift;
+        while(frontLeftMotor.getCurrentPosition() < lift && craneMotor.getCurrentPosition() < lift){
+
+            craneMotor.setPower(.75);
+
+        }
+        craneMotor.setPower(0);
+        reset();
+    }
+
 
     public void driveForward(double distance){
         distance = 33.3333 * distance;
@@ -292,3 +333,9 @@ public class BasicOpMode_Linear extends LinearOpMode {
 //turn 90 = right
 //turn -90 = left
 //driveBackward needs negative
+
+
+//Begin Vision
+
+//how to use servo
+ //servoMain.setPosition(value);
