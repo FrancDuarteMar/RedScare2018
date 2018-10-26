@@ -1,31 +1,3 @@
-/* Copyright (c) 2017 FIRST. All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without modification,
- * are permitted (subject to the limitations in the disclaimer below) provided that
- * the following conditions are met:
- *
- * Redistributions of source code must retain the above copyright notice, this list
- * of conditions and the following disclaimer.
- *
- * Redistributions in binary form must reproduce the above copyright notice, this
- * list of conditions and the following disclaimer in the documentation and/or
- * other materials provided with the distribution.
- *
- * Neither the name of FIRST nor the names of its contributors may be used to endorse or
- * promote products derived from this software without specific prior written permission.
- *
- * NO EXPRESS OR IMPLIED LICENSES TO ANY PARTY'S PATENT RIGHTS ARE GRANTED BY THIS
- * LICENSE. THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
- * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
- * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
- * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
- * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
- * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
- * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
 
 package org.firstinspires.ftc.teamcode;
 
@@ -35,9 +7,10 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-@Autonomous(name="Basic: Linear OpMode", group="Linear Opmode")
+@Autonomous(name="LeftDepot", group="Linear Opmode")
 
-public class BasicOpMode_Linear extends LinearOpMode {
+public class LeftDepot extends LinearOpMode {
+
 
     private DcMotor frontLeftMotor =  null;
     private DcMotor frontRightMotor = null;
@@ -120,7 +93,7 @@ public class BasicOpMode_Linear extends LinearOpMode {
         */
 
 
-      //turn(TYPE I DEGREES;
+        //turn(TYPE I DEGREES;
         //driveForward(TYPE IN CENTIMETERS);
 
 
@@ -145,8 +118,8 @@ public class BasicOpMode_Linear extends LinearOpMode {
 
         //drive for middle; start at crater
         //working
-
 /*
+
         driveForward(62);
         driveBackward(-62); //end of middle specific code
         driveForward(35);
@@ -157,12 +130,12 @@ public class BasicOpMode_Linear extends LinearOpMode {
         servoMain.setPosition(-1);
         servoMain.setPosition(1);
         driveBackward(-220);
-        liftup(10); //only goes up 3.5
-        liftup(48.18); //only change the 5
+//        liftup(10); //only goes up 3.5
+//        liftup(48.18); //only change the 5
 */
 
         //drive for left; start at crater
-
+/*
 //test to see if code is working
         turn(-35);
         driveForward(62);
@@ -177,7 +150,7 @@ public class BasicOpMode_Linear extends LinearOpMode {
         servoMain.setPosition(1);
         driveBackward(-220);
 
-
+*/
 
         //Beginning of depot start. Left and right is relative to robot.
 
@@ -205,8 +178,8 @@ public class BasicOpMode_Linear extends LinearOpMode {
 
         //drive for left, start at depot
 
-       /*
-         turn(-30);
+
+        turn(-30);
         driveForward(95);
         driveForward(35);
         turn(45);
@@ -216,7 +189,7 @@ public class BasicOpMode_Linear extends LinearOpMode {
         servoMain.setPosition(1);
         driveForward(250);
 
-*/
+
     }
 
     public void drop(double drop){
@@ -236,8 +209,8 @@ public class BasicOpMode_Linear extends LinearOpMode {
         lift = 20.83125 * lift;
         while(pickupMotor.getCurrentPosition() < lift && craneMotor.getCurrentPosition() < lift){
 
-           craneMotor.setPower(.75);
-           pickupMotor.setPower(.75);
+            craneMotor.setPower(.75);
+            pickupMotor.setPower(.75);
         }
         craneMotor.setPower(0);
         pickupMotor.setPower(0);
@@ -372,4 +345,4 @@ public class BasicOpMode_Linear extends LinearOpMode {
 //Begin Vision
 
 //how to use servo
- //servoMain.setPosition(value);
+//servoMain.setPosition(value);
