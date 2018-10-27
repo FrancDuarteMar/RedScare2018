@@ -8,10 +8,12 @@ import com.qualcomm.robotcore.hardware.GyroSensor;
 import com.qualcomm.robotcore.hardware.Gyroscope;
 import com.qualcomm.robotcore.hardware.Servo;
 
-/* MAIN TELEOP TESTING CODE. MESSY WITH MOST OF THE CODE WE USED STORED HERE */
 
-@TeleOp(name="Red Scare Op Mode", group="Red Scare")
-public class RedScareOpMode extends OpMode {
+// for use with joystick as servo controller
+
+
+@TeleOp(name="bigBoy_Test", group="bigBoy_Test")
+public class bigBoy_Test extends OpMode {
 
     private DcMotor frontLeftMotor = null;
     private DcMotor frontRightMotor = null;
@@ -32,7 +34,9 @@ public class RedScareOpMode extends OpMode {
         craneMotor = hardwareMap.get(DcMotor.class, "craneMotor");
         pickupMotor = hardwareMap.get(DcMotor.class, "pickupMotor");
         servoMain = hardwareMap.get(Servo.class, "servoMain");
+
 //        initGoldAlignDetector();
+
         frontLeftMotor.setDirection(DcMotor.Direction.REVERSE);
         backLeftMotor.setDirection(DcMotor.Direction.REVERSE);
         craneMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -45,7 +49,6 @@ public class RedScareOpMode extends OpMode {
         backRightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         frontLeftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         frontRightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
         craneMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         craneMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         pickupMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -64,6 +67,8 @@ public class RedScareOpMode extends OpMode {
 //        telemetry.addData("X Pos" , detector.getXPosition());
         telemetry.update();
         //sticks controlling driving code
+
+        /* DRIVING */
 
         //left stick going backwards by pushing forward
         if (gamepad1.left_stick_y < 0) {
@@ -96,60 +101,63 @@ public class RedScareOpMode extends OpMode {
             backRightMotor.setPower(0);
         }
 
-      /*  //enable brake mode (Might not work)
-        if (gamepad1.b){
-            craneMotor.setPowerFloat();
-            pickupMotor.setPowerFloat();
-            craneMotor.setPowerFloat();
-            pickupMotor.setPowerFloat();
+        /* TURN AROUND */
 
-            //craneMotor.setZeroPowerBehavior();
-        }
-*/
-        //different test for
-
-        //turn 180(around)
+        //turn (around)
         if (gamepad1.y){
-            turn(180);
+            turn(360); //test not sure if it works
         }
 
-        //lifting mechanism with Bumpers
+        /* SERVO ARM BLOCKING MECHANISM */
 
-        //right dpad goes up
-        if (gamepad1.dpad_up /*&& !gamepad1.dpad_down*/) {
-            craneMotor.setPower(1);
-            //pickupMotor.setPower(-1); //only for test bed
-        }
-        //left dpad goes down
-        if (gamepad1.dpad_down /* && !gamepad1.dpad_up*/) {
-            craneMotor.setPower(-.1); //decrease speed for second test bed. try ".5"
-           // pickupMotor.setPower(1); //only for first test bed lift
-        }
-        //no dpad being pushed
-        if (!gamepad1.dpad_down /* && !gamepad1.dpad_up  && !gamepad1.right_bumper && !gamepad1.left_bumper*/){
-            craneMotor.setPower(0);
-         //   pickupMotor.setPower(0); //only for first test bed lift
-        }
-
-
-        //pickup Mechanism with Dpad
-
-        //dpad up initiates pickup mechanism
-        if (gamepad1.right_bumper /* && !gamepad1.left_bumper && !gamepad1.dpad_down && !gamepad1.dpad_up*/) {
-            pickupMotor.setPower(.75);
-        }
-        //dpad down releases the balls
-
-        if (gamepad1.left_bumper /*&& !gamepad1.right_bumper && !gamepad1.dpad_down && !gamepad1.dpad_up*/) {
-            pickupMotor.setPower(-.75);
-        }
-        if (gamepad1.b){
-            servoMain.setPosition(1);
-
-        }
-        if (gamepad1.a){
+        //servo on blocking arm with movement controls
+        if (gamepad1.left_stick_button){
             servoMain.setPosition(0);
         }
+
+        //servo not blocking arm, movements with controls
+        if (gamepad1.right_stick_button){
+            servoMain.setPosition(1);
+        }
+
+            /* ARM LIFTING MECHANISM WITH D-PAD */
+
+        // arm goes up, with dpag up
+        if (gamepad1.dpad_up && !gamepad1.dpad_down) {
+            craneMotor.setPower(1);
+        }
+
+        //arm goes down, dpad down
+        if (gamepad1.dpad_down && !gamepad1.dpad_up) {
+            craneMotor.setPower(-1);
+        }
+
+        //no movement
+        if (!gamepad1.dpad_up && !gamepad1.dpad_down) {
+            craneMotor.setPower(0);
+        }
+
+
+        /* PICK UP MECHANISM */
+
+        //initialize pickup
+        if (gamepad1.left_bumper && !gamepad1.right_bumper){
+            pickupMotor.setPower(-.75);
+        }
+
+        //spit out balls
+        if (gamepad1.right_bumper && !gamepad1.left_bumper){
+            pickupMotor.setPower(.75);
+        }
+
+        //stop no movement
+
+        if (!gamepad1.left_bumper && !gamepad1.right_bumper) {
+            pickupMotor.setPower(0);
+        }
+
+
+
         //no pressing, stops all movement
 /*
         if(gamepad1.right_trigger >1){
@@ -192,7 +200,7 @@ public class RedScareOpMode extends OpMode {
         backRightMotor.setPower(0);
         frontLeftMotor.setPower(0);
         backLeftMotor.setPower(0);
-     //   reset();
+        //   reset();
 
     }
 
@@ -216,7 +224,7 @@ public class RedScareOpMode extends OpMode {
 
 //LEFT IS ALWAYS NEGATIVE AND RIGHT IS POSITIVE
 
-    }
+}
 //    private void initGoldAlignDetector() {
 //        detector = new GoldAlignDetector();
 //        detector.init(hardwareMap.appContext, CameraViewDisplay.getInstance());

@@ -8,10 +8,8 @@ import com.qualcomm.robotcore.hardware.GyroSensor;
 import com.qualcomm.robotcore.hardware.Gyroscope;
 import com.qualcomm.robotcore.hardware.Servo;
 
-/* MAIN TELEOP TESTING CODE. MESSY WITH MOST OF THE CODE WE USED STORED HERE */
-
-@TeleOp(name="Red Scare Op Mode", group="Red Scare")
-public class RedScareOpMode extends OpMode {
+@TeleOp(name=" Test Red Scare Op Mode", group="Red Scare")
+public class Test_RedScareOpMode extends OpMode {
 
     private DcMotor frontLeftMotor = null;
     private DcMotor frontRightMotor = null;
@@ -96,17 +94,8 @@ public class RedScareOpMode extends OpMode {
             backRightMotor.setPower(0);
         }
 
-      /*  //enable brake mode (Might not work)
-        if (gamepad1.b){
-            craneMotor.setPowerFloat();
-            pickupMotor.setPowerFloat();
-            craneMotor.setPowerFloat();
-            pickupMotor.setPowerFloat();
 
-            //craneMotor.setZeroPowerBehavior();
-        }
-*/
-        //different test for
+
 
         //turn 180(around)
         if (gamepad1.y){
@@ -123,12 +112,12 @@ public class RedScareOpMode extends OpMode {
         //left dpad goes down
         if (gamepad1.dpad_down /* && !gamepad1.dpad_up*/) {
             craneMotor.setPower(-.1); //decrease speed for second test bed. try ".5"
-           // pickupMotor.setPower(1); //only for first test bed lift
+            // pickupMotor.setPower(1); //only for first test bed lift
         }
         //no dpad being pushed
         if (!gamepad1.dpad_down /* && !gamepad1.dpad_up  && !gamepad1.right_bumper && !gamepad1.left_bumper*/){
             craneMotor.setPower(0);
-         //   pickupMotor.setPower(0); //only for first test bed lift
+            //   pickupMotor.setPower(0); //only for first test bed lift
         }
 
 
@@ -192,7 +181,7 @@ public class RedScareOpMode extends OpMode {
         backRightMotor.setPower(0);
         frontLeftMotor.setPower(0);
         backLeftMotor.setPower(0);
-     //   reset();
+        //   reset();
 
     }
 
@@ -216,7 +205,7 @@ public class RedScareOpMode extends OpMode {
 
 //LEFT IS ALWAYS NEGATIVE AND RIGHT IS POSITIVE
 
-    }
+}
 //    private void initGoldAlignDetector() {
 //        detector = new GoldAlignDetector();
 //        detector.init(hardwareMap.appContext, CameraViewDisplay.getInstance());

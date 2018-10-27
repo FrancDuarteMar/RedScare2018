@@ -8,10 +8,10 @@ import com.qualcomm.robotcore.hardware.GyroSensor;
 import com.qualcomm.robotcore.hardware.Gyroscope;
 import com.qualcomm.robotcore.hardware.Servo;
 
-/* MAIN TELEOP TESTING CODE. MESSY WITH MOST OF THE CODE WE USED STORED HERE */
+/* FOR TEST BED */
 
-@TeleOp(name="Red Scare Op Mode", group="Red Scare")
-public class RedScareOpMode extends OpMode {
+@TeleOp(name="Main Test bed ", group="Red Scare")
+public class Test_Bed_Main extends OpMode {
 
     private DcMotor frontLeftMotor = null;
     private DcMotor frontRightMotor = null;
@@ -63,7 +63,8 @@ public class RedScareOpMode extends OpMode {
 //        telemetry.addData("IsAligned" , detector.getAligned()); // Is the bot aligned with the gold mineral
 //        telemetry.addData("X Pos" , detector.getXPosition());
         telemetry.update();
-        //sticks controlling driving code
+
+        /* DRIVING */
 
         //left stick going backwards by pushing forward
         if (gamepad1.left_stick_y < 0) {
@@ -96,60 +97,50 @@ public class RedScareOpMode extends OpMode {
             backRightMotor.setPower(0);
         }
 
-      /*  //enable brake mode (Might not work)
-        if (gamepad1.b){
-            craneMotor.setPowerFloat();
-            pickupMotor.setPowerFloat();
-            craneMotor.setPowerFloat();
-            pickupMotor.setPowerFloat();
 
-            //craneMotor.setZeroPowerBehavior();
-        }
-*/
-        //different test for
+
+        /* TURN AROUND */
 
         //turn 180(around)
         if (gamepad1.y){
             turn(180);
         }
 
-        //lifting mechanism with Bumpers
+
+        /* LIFT MECHANISM WITH DPAD */
 
         //right dpad goes up
-        if (gamepad1.dpad_up /*&& !gamepad1.dpad_down*/) {
-            craneMotor.setPower(1);
-            //pickupMotor.setPower(-1); //only for test bed
-        }
-        //left dpad goes down
-        if (gamepad1.dpad_down /* && !gamepad1.dpad_up*/) {
-            craneMotor.setPower(-.1); //decrease speed for second test bed. try ".5"
-           // pickupMotor.setPower(1); //only for first test bed lift
-        }
-        //no dpad being pushed
-        if (!gamepad1.dpad_down /* && !gamepad1.dpad_up  && !gamepad1.right_bumper && !gamepad1.left_bumper*/){
-            craneMotor.setPower(0);
-         //   pickupMotor.setPower(0); //only for first test bed lift
+        if (gamepad1.dpad_up && !gamepad1.dpad_down) {
+            craneMotor.setPower(1); //MUST BE POSITIVE
+
         }
 
+        //left dpad goes down
+        if (gamepad1.dpad_down  && !gamepad1.dpad_up) {
+            craneMotor.setPower(-1); // MUST BE NEGATIVE //decrease speed for second test bed. try ".5"
+
+        }
+        //no dpad being pushed
+        if (!gamepad1.dpad_down  && !gamepad1.dpad_up){
+            craneMotor.setPower(0);
+
+        }
+
+        /* PICK UP MECHANISM, NOT WORKING ON TEST BED BECAUSE THERE IS NO COLLECTOR */
 
         //pickup Mechanism with Dpad
 
         //dpad up initiates pickup mechanism
-        if (gamepad1.right_bumper /* && !gamepad1.left_bumper && !gamepad1.dpad_down && !gamepad1.dpad_up*/) {
+        if (gamepad1.right_bumper && !gamepad1.left_bumper) {
             pickupMotor.setPower(.75);
         }
         //dpad down releases the balls
 
-        if (gamepad1.left_bumper /*&& !gamepad1.right_bumper && !gamepad1.dpad_down && !gamepad1.dpad_up*/) {
+        if (gamepad1.left_bumper && !gamepad1.right_bumper) {
             pickupMotor.setPower(-.75);
         }
-        if (gamepad1.b){
-            servoMain.setPosition(1);
 
-        }
-        if (gamepad1.a){
-            servoMain.setPosition(0);
-        }
+
         //no pressing, stops all movement
 /*
         if(gamepad1.right_trigger >1){
@@ -192,7 +183,7 @@ public class RedScareOpMode extends OpMode {
         backRightMotor.setPower(0);
         frontLeftMotor.setPower(0);
         backLeftMotor.setPower(0);
-     //   reset();
+        //   reset();
 
     }
 
@@ -216,7 +207,7 @@ public class RedScareOpMode extends OpMode {
 
 //LEFT IS ALWAYS NEGATIVE AND RIGHT IS POSITIVE
 
-    }
+}
 //    private void initGoldAlignDetector() {
 //        detector = new GoldAlignDetector();
 //        detector.init(hardwareMap.appContext, CameraViewDisplay.getInstance());

@@ -27,6 +27,10 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+
+//MAIN CODE 
+
+
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -34,6 +38,9 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
+
+/* THIS IS OUR INITIAL CODE FOR AUTONOMOUS. IT IS VERY MESSY AND ALL OVER THE PLACE. THIS SERVES AS A REFERENCE FOR ALL OF OUR AUTONOMOUS CODE */
+
 
 @Autonomous(name="Basic: Linear OpMode", group="Linear Opmode")
 

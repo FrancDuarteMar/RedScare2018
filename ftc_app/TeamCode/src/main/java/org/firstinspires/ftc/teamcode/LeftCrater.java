@@ -67,76 +67,18 @@ public class LeftCrater extends LinearOpMode {
         waitForStart();
         runtime.reset();
 
-        /*
-        frontRightMotor.setPower(1);
-        backRightMotor.setPower(1);
-        frontLeftMotor.setPower(1);
-        backLeftMotor.setPower(1);
-        sleep(2000);
-
-        frontRightMotor.setPower(-1);
-        backRightMotor.setPower(-1);
-        frontLeftMotor.setPower(1);
-        backLeftMotor.setPower(1);
-        sleep(2000);
-
-        frontRightMotor.setPower(1);
-        backRightMotor.setPower(1);
-        frontLeftMotor.setPower(1);
-        backLeftMotor.setPower(1);
-        sleep(2000);
-
-        frontRightMotor.setPower(0);
-        backRightMotor.setPower(0);
-        frontLeftMotor.setPower(0);
-        backLeftMotor.setPower(0);
-        */
-
 
         //turn(TYPE I DEGREES;
         //driveForward(TYPE IN CENTIMETERS);
 
 
-        //The following is for the crater beginning. Right and left is relative to the robot not an outside perspective.
 
-        //drive for right; start at crater
 
-      /*
-        turn(45);
-        driveForward(62);
-        driveBackward(-62);
-        turn(-45); //end of right specific code
-        driveForward(35);
-        turn(-80);
-        driveForward(120);
-        turn(-45);
-        driveForward(140);
-        servoMain.setPosition(-1);
-        servoMain.setPosition(1);
-        driveBackward(-220);
-        */
+        //drive for left relative to robot start at crater
 
-        //drive for middle; start at crater
-        //working
-/*
+        // NOT SURE IF CODE IS WORKING
 
-        driveForward(62);
-        driveBackward(-62); //end of middle specific code
-        driveForward(35);
-        turn(-80);
-        driveForward(120);
-        turn(-45);
-        driveForward(140);
-        servoMain.setPosition(-1);
-        servoMain.setPosition(1);
-        driveBackward(-220);
-//        liftup(10); //only goes up 3.5
-//        liftup(48.18); //only change the 5
-*/
 
-        //drive for left; start at crater
-
-//test to see if code is working
         turn(-30);
         driveForward(62);
         driveBackward(-62);
@@ -152,44 +94,7 @@ public class LeftCrater extends LinearOpMode {
 
 
 
-        //Beginning of depot start. Left and right is relative to robot.
 
-        //drive for center, start at depot
-
-  /*    driveForward(62);
-        driveForward(60);
-        servoMain.setPosition(-1);
-        servoMain.setPosition(1);
-        turn(120);
-        driveForward(220);
-*/
-
-        //drive for right, start at depot
-/*
-        turn(30);
-        driveForward(95);
-        driveForward(35);
-        turn(-70);
-        driveForward(80);
-        servoMain.setPosition(-1);
-        servoMain.setPosition(1);
-        driveBackward(-250);
-*/
-
-        //drive for left, start at depot
-
-       /*
-         turn(-30);
-        driveForward(95);
-        driveForward(35);
-        turn(45);
-        driveForward(60);
-        turn(90);
-        servoMain.setPosition(-1);
-        servoMain.setPosition(1);
-        driveForward(250);
-
-*/
     }
 
     public void drop(double drop){

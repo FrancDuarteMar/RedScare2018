@@ -67,30 +67,6 @@ public class RightCrater extends LinearOpMode {
         waitForStart();
         runtime.reset();
 
-        /*
-        frontRightMotor.setPower(1);
-        backRightMotor.setPower(1);
-        frontLeftMotor.setPower(1);
-        backLeftMotor.setPower(1);
-        sleep(2000);
-
-        frontRightMotor.setPower(-1);
-        backRightMotor.setPower(-1);
-        frontLeftMotor.setPower(1);
-        backLeftMotor.setPower(1);
-        sleep(2000);
-
-        frontRightMotor.setPower(1);
-        backRightMotor.setPower(1);
-        frontLeftMotor.setPower(1);
-        backLeftMotor.setPower(1);
-        sleep(2000);
-
-        frontRightMotor.setPower(0);
-        backRightMotor.setPower(0);
-        frontLeftMotor.setPower(0);
-        backLeftMotor.setPower(0);
-        */
 
 
         //turn(TYPE I DEGREES;
@@ -116,80 +92,6 @@ public class RightCrater extends LinearOpMode {
         driveBackward(-220);
 
 
-        //drive for middle; start at crater
-        //working
-/*
-
-        driveForward(62);
-        driveBackward(-62); //end of middle specific code
-        driveForward(35);
-        turn(-80);
-        driveForward(120);
-        turn(-45);
-        driveForward(140);
-        servoMain.setPosition(-1);
-        servoMain.setPosition(1);
-        driveBackward(-220);
-        liftup(10); //only goes up 3.5
-        liftup(48.18); //only change the 5
-*/
-
-        //drive for left; start at crater
-/*
-//test to see if code is working
-        turn(-35);
-        driveForward(62);
-        driveBackward(-62);
-        turn(35);
-        driveForward(35); //end of the left specific code
-        turn(-80);
-        driveForward(120);
-        turn(-45);
-        driveForward(140);
-        servoMain.setPosition(-1);
-        servoMain.setPosition(1);
-        driveBackward(-220);
-*/
-
-
-        //Beginning of depot start. Left and right is relative to robot.
-
-        //drive for center, start at depot
-
-  /*    driveForward(62);
-        driveForward(60);
-        servoMain.setPosition(-1);
-        servoMain.setPosition(1);
-        turn(120);
-        driveForward(220);
-*/
-
-        //drive for right, start at depot
-/*
-        turn(30);
-        driveForward(95);
-        driveForward(35);
-        turn(-70);
-        driveForward(80);
-        servoMain.setPosition(-1);
-        servoMain.setPosition(1);
-        driveBackward(-250);
-*/
-
-        //drive for left, start at depot
-
-       /*
-         turn(-30);
-        driveForward(95);
-        driveForward(35);
-        turn(45);
-        driveForward(60);
-        turn(90);
-        servoMain.setPosition(-1);
-        servoMain.setPosition(1);
-        driveForward(250);
-
-*/
     }
 
     public void drop(double drop){

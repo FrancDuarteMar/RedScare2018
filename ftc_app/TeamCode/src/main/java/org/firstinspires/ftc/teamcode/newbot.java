@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+/* MORE AUTONOMOUS MODE TESTING */
 @Autonomous(name="newbot", group="Linear Opmode")
 
 public class newbot extends LinearOpMode {
