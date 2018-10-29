@@ -19,6 +19,9 @@ public class CenterCrater extends LinearOpMode {
     private DcMotor craneMotor = null;
     private Servo servoMain = null;
     private DcMotor pickupMotor = null;
+    private int craneTop = -3191; //-2729
+    private int craneLow = 0;
+
 
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
@@ -36,6 +39,7 @@ public class CenterCrater extends LinearOpMode {
         craneMotor = hardwareMap.get(DcMotor.class, "craneMotor");
         pickupMotor = hardwareMap.get(DcMotor.class, " pickupMotor");
         servoMain = hardwareMap.get(Servo.class, "servoMain");
+
 
 
         frontLeftMotor.setDirection(DcMotor.Direction.REVERSE);
@@ -75,17 +79,23 @@ public class CenterCrater extends LinearOpMode {
         //drive for middle; start at crater
         //working
 
+        //craneMotor.setTargetPosition(-2729);
 
+        drop();
+        turn(-10);
+        driveBackward(-10);
+        turn(10);
+        turn(180 );
         driveForward(62);
         driveBackward(-62); //end of middle specific code
         driveForward(35);
         turn(-80);
-        driveForward(120);
+        driveForward(125);
         turn(-45);
         driveForward(140);
         servoMain.setPosition(-1);
         servoMain.setPosition(1);
-        driveBackward(-240);
+        driveBackward(-260);
 //        liftup(10); //only goes up 3.5
 //        liftup(48.18); //only change the 5
 
@@ -93,18 +103,31 @@ public class CenterCrater extends LinearOpMode {
 
     }
 
-    public void drop(double drop){
-        drop = 20.83125 * drop;
+    public void drop(){
+        while (craneMotor.getCurrentPosition() > craneTop) {
+
+            craneMotor.setPower(-1);
+            pickupMotor.setPower(1);
+        }
+
+            craneMotor.setPower(0);
+
+
+        }
+    /*
+     public void drop(double drop){
+        //drop = 20.83125 * drop;
         while(frontLeftMotor.getCurrentPosition() < drop && craneMotor.getCurrentPosition() < drop){
 
-            craneMotor.setPower(.75);
-            pickupMotor.setPower(-.75);
+            craneMotor.setPower(1);
+            pickupMotor.setPower(-1);
 
         }
         craneMotor.setPower(0);
         pickupMotor.setPower(0);
         reset();
     }
+    */
 
     public void liftup(double lift){
         lift = 20.83125 * lift;

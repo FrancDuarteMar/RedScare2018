@@ -19,6 +19,8 @@ public class LeftCrater extends LinearOpMode {
     private DcMotor craneMotor = null;
     private Servo servoMain = null;
     private DcMotor pickupMotor = null;
+    private int craneTop = -3191; //-2729
+
 
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
@@ -77,6 +79,7 @@ public class LeftCrater extends LinearOpMode {
         //drive for left relative to robot start at crater
 
         // NOT SURE IF CODE IS WORKING
+
 
 
         turn(-30);

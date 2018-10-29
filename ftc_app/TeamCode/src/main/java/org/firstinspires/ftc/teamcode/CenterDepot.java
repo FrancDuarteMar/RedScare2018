@@ -19,6 +19,8 @@ public class CenterDepot extends LinearOpMode {
     private DcMotor craneMotor = null;
     private Servo servoMain = null;
     private DcMotor pickupMotor = null;
+    private int craneTop = -3191; //-2729
+
 
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
@@ -81,6 +83,11 @@ public class CenterDepot extends LinearOpMode {
 
         //drive for center, start at depot
 
+        drop();
+        turn(-10);
+        driveBackward(-10);
+        turn(10 );
+        turn(180);
         driveForward(62);
         driveForward(60);
         servoMain.setPosition(-1);
@@ -92,7 +99,21 @@ public class CenterDepot extends LinearOpMode {
 
     }
 
-    public void drop(double drop){
+    // DROP DOWN FUNCTION BASED ON TICKS
+
+    public void drop(){
+        while (craneMotor.getCurrentPosition() > craneTop) {
+
+            craneMotor.setPower(-1);
+            pickupMotor.setPower(1);
+        }
+
+        craneMotor.setPower(0);
+
+
+    }
+
+  /*  public void drop(double drop){
         drop = 20.83125 * drop;
         while(frontLeftMotor.getCurrentPosition() < drop && craneMotor.getCurrentPosition() < drop){
 
@@ -104,7 +125,8 @@ public class CenterDepot extends LinearOpMode {
         pickupMotor.setPower(0);
         reset();
     }
-
+*/
+  /*
     public void liftup(double lift){
         lift = 20.83125 * lift;
         while(pickupMotor.getCurrentPosition() < lift && craneMotor.getCurrentPosition() < lift){
@@ -116,7 +138,7 @@ public class CenterDepot extends LinearOpMode {
         pickupMotor.setPower(0);
         reset();
     }
-
+*/
 /*
     public void lift(double lift){
         lift = 20.83125 * lift;

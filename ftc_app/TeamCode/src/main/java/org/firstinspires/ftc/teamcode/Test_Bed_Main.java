@@ -10,6 +10,8 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 /* FOR TEST BED */
 
+
+
 @TeleOp(name="Main Test bed ", group="Red Scare")
 public class Test_Bed_Main extends OpMode {
 
@@ -20,8 +22,8 @@ public class Test_Bed_Main extends OpMode {
     private DcMotor craneMotor = null;
     private DcMotor pickupMotor = null;
     private Servo servoMain = null;
-
-
+    private int craneTop = -3191; //-2729 fir old new is 3822. needs to be negative <- for orange. white is 3191
+    private int craneLow = 0;
 
     @Override
     public void init() {
@@ -53,6 +55,10 @@ public class Test_Bed_Main extends OpMode {
 
         telemetry.addData("encodervalue:", craneMotor.getCurrentPosition());
         telemetry.update();
+
+        //craneMotor.isBusy();
+
+
 
 
     }
@@ -107,23 +113,24 @@ public class Test_Bed_Main extends OpMode {
         }
 
 
-        /* LIFT MECHANISM WITH DPAD */
+        /* LIFT MECHANISM WITH DPAD */ //use else statement instead of &&
 
         //right dpad goes up
-        if (gamepad1.dpad_up && !gamepad1.dpad_down) {
+        if (gamepad1.dpad_up && (craneMotor.getCurrentPosition() > craneTop)) {
             craneMotor.setPower(1); //MUST BE POSITIVE
+            telemetry.addData("up " , craneMotor.getCurrentPosition());
 
         }
 
         //left dpad goes down
-        if (gamepad1.dpad_down  && !gamepad1.dpad_up) {
-            craneMotor.setPower(-1); // MUST BE NEGATIVE //decrease speed for second test bed. try ".5"
-
+        else if (gamepad1.dpad_down && (craneMotor.getCurrentPosition() < craneLow)) {
+            craneMotor.setPower(-1); // MUST BE NEGATIVE //decrease speed for second test bed. try ".5"  //negative when wound  on the the top
+            telemetry.addData("down " , craneMotor.getCurrentPosition());
         }
         //no dpad being pushed
-        if (!gamepad1.dpad_down  && !gamepad1.dpad_up){
+        else {
             craneMotor.setPower(0);
-
+            telemetry.addData("stop " , craneMotor.getCurrentPosition());
         }
 
         /* PICK UP MECHANISM, NOT WORKING ON TEST BED BECAUSE THERE IS NO COLLECTOR */
@@ -140,6 +147,9 @@ public class Test_Bed_Main extends OpMode {
             pickupMotor.setPower(-.75);
         }
 
+
+        telemetry.addData("enconder " , craneMotor.getCurrentPosition());
+        telemetry.update();
 
         //no pressing, stops all movement
 /*
