@@ -19,8 +19,10 @@ public class CenterCrater extends LinearOpMode {
     private DcMotor craneMotor = null;
     private Servo servoMain = null;
     private DcMotor pickupMotor = null;
-    private int craneTop = -3191; //-2729
+    private int craneTop = -3088; //-2729    //old max with string on the front -3191
     private int craneLow = 0;
+    private int craneLim = -61; //used to be 100
+
 
 
     // Declare OpMode members.
@@ -84,6 +86,7 @@ public class CenterCrater extends LinearOpMode {
         drop();
         turn(-10);
         driveBackward(-10);
+        driveForward(10);
         turn(10);
         turn(180 );
         driveForward(62);
@@ -96,6 +99,7 @@ public class CenterCrater extends LinearOpMode {
         servoMain.setPosition(-1);
         servoMain.setPosition(1);
         driveBackward(-260);
+        lower();
 //        liftup(10); //only goes up 3.5
 //        liftup(48.18); //only change the 5
 
@@ -103,6 +107,14 @@ public class CenterCrater extends LinearOpMode {
 
     }
 
+
+    public void lower() {
+        while (craneMotor.getCurrentPosition()< craneLim){
+            craneMotor.setPower(1);
+            pickupMotor.setPower(-1);
+        }
+        craneMotor.setPower(0);
+    }
     public void drop(){
         while (craneMotor.getCurrentPosition() > craneTop) {
 

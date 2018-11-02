@@ -22,8 +22,9 @@ public class Test_Bed_Main extends OpMode {
     private DcMotor craneMotor = null;
     private DcMotor pickupMotor = null;
     private Servo servoMain = null;
-    private int craneTop = -3191; //-2729 fir old new is 3822. needs to be negative <- for orange. white is 3191
+    private int craneTop = -3640; //-2729 fir old new is 3822. needs to be negative <- for orange. white is 3191 //used to be negative but now + , string on front, -3191
     private int craneLow = 0;
+    private int craneLim = -110;
 
     @Override
     public void init() {
@@ -116,15 +117,15 @@ public class Test_Bed_Main extends OpMode {
         /* LIFT MECHANISM WITH DPAD */ //use else statement instead of &&
 
         //right dpad goes up
-        if (gamepad1.dpad_up && (craneMotor.getCurrentPosition() > craneTop)) {
-            craneMotor.setPower(1); //MUST BE POSITIVE
+        if (gamepad1.dpad_up && (craneMotor.getCurrentPosition() > craneTop)) { //try less than
+            craneMotor.setPower(-1); //MUST BE POSITIVE 11-1 set negative usually +
             telemetry.addData("up " , craneMotor.getCurrentPosition());
 
         }
 
         //left dpad goes down
-        else if (gamepad1.dpad_down && (craneMotor.getCurrentPosition() < craneLow)) {
-            craneMotor.setPower(-1); // MUST BE NEGATIVE //decrease speed for second test bed. try ".5"  //negative when wound  on the the top
+        else if (gamepad1.dpad_down && (craneMotor.getCurrentPosition() < craneLow)) { //try greater than
+            craneMotor.setPower(1); // MUST BE NEGATIVE //decrease speed for second test bed. try ".5"  //negative when wound  on the the top 11/1 set positive, usually negative
             telemetry.addData("down " , craneMotor.getCurrentPosition());
         }
         //no dpad being pushed
@@ -137,7 +138,7 @@ public class Test_Bed_Main extends OpMode {
 
         //pickup Mechanism with Dpad
 
-        //dpad up initiates pickup mechanism
+        //bumper initiates pickup mechanism
         if (gamepad1.right_bumper && !gamepad1.left_bumper) {
             pickupMotor.setPower(.75);
         }
