@@ -2,109 +2,156 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.GyroSensor;
-import com.qualcomm.robotcore.hardware.Gyroscope;
 import com.qualcomm.robotcore.hardware.Servo;
 
-/* FOR TEST BED */
+
+@TeleOp(name="Mech Test ", group="Red Scare")
+public class mechtest extends OpMode {
+
+        private DcMotor frontLeftMotor = null;
+        private DcMotor frontRightMotor = null;
+        private DcMotor backLeftMotor = null;
+        private DcMotor backRightMotor = null;
+        private float drive = 0;
 
 
+        @Override
+        public void init() {
+            frontLeftMotor = hardwareMap.get(DcMotor.class, "Front left motor");
+            frontRightMotor = hardwareMap.get(DcMotor.class, "Front right motor");
+            backLeftMotor = hardwareMap.get(DcMotor.class, "Back left motor");
+            backRightMotor = hardwareMap.get(DcMotor.class, "Back right motor");
 
-@TeleOp(name="Main Test bed ", group="Red Scare")
-public class Test_Bed_Main extends OpMode {
-
-    private DcMotor frontLeftMotor = null;
-    private DcMotor frontRightMotor = null;
-    private DcMotor backLeftMotor = null;
-    private DcMotor backRightMotor = null;
-    private DcMotor craneMotor = null;
-    private DcMotor pickupMotor = null;
-    private Servo servoMain = null;
-    private int craneTop = -3640; //-2729 fir old new is 3822. needs to be negative <- for orange. white is 3191 //used to be negative but now + , string on front, -3191
-    private int craneLow = 0;
-    private int craneLim = -110;
-
-    @Override
-    public void init() {
-        frontLeftMotor = hardwareMap.get(DcMotor.class, "Front left motor");
-        frontRightMotor = hardwareMap.get(DcMotor.class, "Front right motor");
-        backLeftMotor = hardwareMap.get(DcMotor.class, "Back left motor");
-        backRightMotor = hardwareMap.get(DcMotor.class, "Back right motor");
-        craneMotor = hardwareMap.get(DcMotor.class, "craneMotor");
-        pickupMotor = hardwareMap.get(DcMotor.class, "pickupMotor");
-        servoMain = hardwareMap.get(Servo.class, "servoMain");
 //        initGoldAlignDetector();
-        frontLeftMotor.setDirection(DcMotor.Direction.REVERSE);
-        backLeftMotor.setDirection(DcMotor.Direction.REVERSE);
-        craneMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        craneMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        backLeftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        backRightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        frontLeftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        frontRightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        backLeftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        backRightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        frontLeftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        frontRightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            frontLeftMotor.setDirection(DcMotor.Direction.REVERSE);
+            backLeftMotor.setDirection(DcMotor.Direction.REVERSE);
 
-        craneMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        craneMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        pickupMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        pickupMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            backLeftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            backRightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            frontLeftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            frontRightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            backLeftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            backRightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            frontLeftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            frontRightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        telemetry.addData("encodervalue:", craneMotor.getCurrentPosition());
-        telemetry.update();
-
-        //craneMotor.isBusy();
+            //craneMotor.isBusy();
 
 
 
 
-    }
+        }
 
-    @Override
-    public void loop() {
+        @Override
+        public void loop() {
 
 //        telemetry.addData("IsAligned" , detector.getAligned()); // Is the bot aligned with the gold mineral
 //        telemetry.addData("X Pos" , detector.getXPosition());
-        telemetry.update();
+            telemetry.update();
 
-        /* DRIVING */
+            /* DRIVING */
 
-        //left stick going backwards by pushing forward
-        if (gamepad1.left_stick_y < 0) {
-            frontLeftMotor.setPower(.75);
-            backLeftMotor.setPower(.75);
-        }
-        //right stick going backwards by pushing backward
-        if (gamepad1.right_stick_y < 0) {
-            frontRightMotor.setPower(.75);
-            backRightMotor.setPower(.75);
-        }
 
-        if (gamepad1.right_stick_y == 0) {
-            frontRightMotor.setPower(0);
-            backRightMotor.setPower(0);
-        }
-            //left stick going forwards
-            if (gamepad1.left_stick_y > 0) {
-                frontLeftMotor.setPower(-.75);
-                backLeftMotor.setPower(-.75);
+            if (!gamepad1.dpad_left && !gamepad1.dpad_right) {
+
+                if (gamepad1.left_stick_y < 0) {
+                    frontLeftMotor.setPower(.75);
+                    backLeftMotor.setPower(.75);
+                    drive = 1;
+
+                }
+
+                if (gamepad1.left_stick_y > 0) {
+                    frontLeftMotor.setPower(-.75);
+                    backLeftMotor.setPower(-.75);
+                    drive = 1;
+                }
+                if (gamepad1.right_stick_y == 0) {
+                    frontLeftMotor.setPower(0);
+                    backLeftMotor.setPower(0);
+                    drive = 0;
+                }
+
+
+                //left stick going forwards
+                if (gamepad1.right_stick_y < 0) {
+                    frontLeftMotor.setPower(.75);
+                    backLeftMotor.setPower(.75);
+                    drive = 1;
+                }
+                //right stick going forwards
+                if (gamepad1.right_stick_y > 0) {
+                    frontRightMotor.setPower(-.75);
+                    backRightMotor.setPower(-.75);
+                    drive = 1;
+                }
+                //left stick at zero
+                if (gamepad1.right_stick_y == 0)   {
+                    frontLeftMotor.setPower(0);
+                    backLeftMotor.setPower(0);
+                    drive = 0 ;
+
+                }
+
+
             }
-            //right stick going forwards
-            if (gamepad1.right_stick_y > 0) {
-                frontRightMotor.setPower(-.75);
-                backRightMotor.setPower(-.75);
-            }
-            //left stick at zero
-            if (gamepad1.left_stick_y == 0) {
-                frontLeftMotor.setPower(0);
-                backLeftMotor.setPower(0);
 
+            if (drive == 0) {
+                if (gamepad1.dpad_right) {
+                    frontLeftMotor.setPower(.5);
+                    backLeftMotor.setPower(-.5);
+                    frontRightMotor.setPower(.5);
+                    backRightMotor.setPower(-.5);
+
+                } else if (gamepad1.dpad_left && !gamepad1.dpad_down && !gamepad1.dpad_up) {
+                    frontLeftMotor.setPower(-.5);
+                    backLeftMotor.setPower(.5);
+                    frontRightMotor.setPower(-.5);
+                    backRightMotor.setPower(.5);
+
+                } else {
+                    frontLeftMotor.setPower(0);
+                    frontRightMotor.setPower(0);
+                    backLeftMotor.setPower(0);
+                    backRightMotor.setPower(0);
+                }
             }
+
+
+
+//            //left stick going backwards by pushing forward
+//            if (gamepad1.left_stick_y < 0) {
+//                frontLeftMotor.setPower(.75);
+//                backLeftMotor.setPower(.75);
+//            }
+//            //right stick going backwards by pushing backward
+//            if (gamepad1.right_stick_y < 0) {
+//                frontRightMotor.setPower(.75);
+//                backRightMotor.setPower(.75);
+//            }
 //
+//            if (gamepad1.right_stick_y == 0) {
+//                frontRightMotor.setPower(0);
+//                backRightMotor.setPower(0);
+//            }
+//            //left stick going forwards
+//            if (gamepad1.left_stick_y > 0) {
+//                frontLeftMotor.setPower(-.75);
+//                backLeftMotor.setPower(-.75);
+//            }
+//            //right stick going forwards
+//            if (gamepad1.right_stick_y > 0) {
+//                frontRightMotor.setPower(-.75);
+//                backRightMotor.setPower(-.75);
+//            }
+//            //left stick at zero
+//            if (gamepad1.left_stick_y == 0) {
+//                frontLeftMotor.setPower(0);
+//                backLeftMotor.setPower(0);
+//
+//            }
+
 //       //right stick at zero
 //        if (gamepad1.right_stick_y == 0 && (gamepad1.right_stick_x == 0 )) {
 //            frontRightMotor.setPower(0);
@@ -175,45 +222,12 @@ public class Test_Bed_Main extends OpMode {
             }
 
 
-            /* LIFT MECHANISM WITH DPAD */ //use else statement instead of &&
-
-            //right dpad goes up
-            if (gamepad1.dpad_up && (craneMotor.getCurrentPosition() > craneTop)) { //try less than
-                craneMotor.setPower(-1); //MUST BE POSITIVE 11-1 set negative usually +
-                telemetry.addData("up ", craneMotor.getCurrentPosition());
-
-            }
-
-            //left dpad goes down
-            else if (gamepad1.dpad_down && (craneMotor.getCurrentPosition() < craneLow)) { //try greater than
-                craneMotor.setPower(1); // MUST BE NEGATIVE //decrease speed for second test bed. try ".5"  //negative when wound  on the the top 11/1 set positive, usually negative
-                telemetry.addData("down ", craneMotor.getCurrentPosition());
-            }
-
-        //slow down button system right here
-
-        //right bumper goes up slow
-        else if (gamepad1.right_bumper && (craneMotor.getCurrentPosition() > craneTop)) { //try less than
-            craneMotor.setPower(-.5); //MUST BE POSITIVE 11-1 set negative usually +
-            telemetry.addData("up ", craneMotor.getCurrentPosition());
-
-        }
-
-        //left bumper goes down slow
-        else if (gamepad1.left_bumper && (craneMotor.getCurrentPosition() < craneLow)) { //try greater than
-            craneMotor.setPower(.5); // MUST BE NEGATIVE //decrease speed for second test bed. try ".5"  //negative when wound  on the the top 11/1 set positive, usually negative
-            telemetry.addData("down ", craneMotor.getCurrentPosition());
-        }
-            //no dpad being pushed
-            else {
-                craneMotor.setPower(0);
-                telemetry.addData("stop ", craneMotor.getCurrentPosition());
-            }
 
 
 
 
-        /* PICK UP MECHANISM, NOT WORKING ON TEST BED BECAUSE THERE IS NO COLLECTOR */
+
+            /* PICK UP MECHANISM, NOT WORKING ON TEST BED BECAUSE THERE IS NO COLLECTOR */
 /*
             //pickup Mechanism with Dpad
 
@@ -322,3 +336,4 @@ public class Test_Bed_Main extends OpMode {
 //    }
 
     }
+
