@@ -35,9 +35,12 @@ public class Test_Bed_Main extends OpMode {
         craneMotor = hardwareMap.get(DcMotor.class, "craneMotor");
         pickupMotor = hardwareMap.get(DcMotor.class, "pickupMotor");
         servoMain = hardwareMap.get(Servo.class, "servoMain");
+
 //        initGoldAlignDetector();
+
         frontLeftMotor.setDirection(DcMotor.Direction.REVERSE);
         backLeftMotor.setDirection(DcMotor.Direction.REVERSE);
+
         craneMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         craneMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         backLeftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -71,8 +74,21 @@ public class Test_Bed_Main extends OpMode {
 //        telemetry.addData("X Pos" , detector.getXPosition());
         telemetry.update();
 
+
+
         /* DRIVING */
 
+
+
+        frontLeftMotor.setPower(gamepad1.left_stick_y);
+        backLeftMotor.setPower(gamepad1.left_stick_y);
+        frontRightMotor.setPower(gamepad1.right_stick_y);
+        backRightMotor.setPower(gamepad1.right_stick_y);
+
+
+
+
+        /*
         //left stick going backwards by pushing forward
         if (gamepad1.left_stick_y < 0) {
             frontLeftMotor.setPower(.75);
@@ -103,7 +119,7 @@ public class Test_Bed_Main extends OpMode {
                 frontLeftMotor.setPower(0);
                 backLeftMotor.setPower(0);
 
-            }
+            } */
 //
 //       //right stick at zero
 //        if (gamepad1.right_stick_y == 0 && (gamepad1.right_stick_x == 0 )) {

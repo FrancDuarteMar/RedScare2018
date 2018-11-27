@@ -55,46 +55,16 @@ public class mechtest extends OpMode {
 
             if (!gamepad1.dpad_left && !gamepad1.dpad_right) {
 
-                if (gamepad1.left_stick_y < 0) {
-                    frontLeftMotor.setPower(.75);
-                    backLeftMotor.setPower(.75);
-                    drive = 1;
+                frontLeftMotor.setPower(gamepad1.left_stick_y);
+                backLeftMotor.setPower(gamepad1.left_stick_y);
+                frontRightMotor.setPower(gamepad1.right_stick_y);
+                backRightMotor.setPower(gamepad1.right_stick_y);
 
-                }
-
-                if (gamepad1.left_stick_y > 0) {
-                    frontLeftMotor.setPower(-.75);
-                    backLeftMotor.setPower(-.75);
+                if (gamepad1.left_stick_y != 0 || gamepad1.right_stick_y != 0) {
                     drive = 1;
-                }
-                if (gamepad1.right_stick_y == 0) {
-                    frontLeftMotor.setPower(0);
-                    backLeftMotor.setPower(0);
+                } else {
                     drive = 0;
                 }
-
-
-                //left stick going forwards
-                if (gamepad1.right_stick_y < 0) {
-                    frontLeftMotor.setPower(.75);
-                    backLeftMotor.setPower(.75);
-                    drive = 1;
-                }
-                //right stick going forwards
-                if (gamepad1.right_stick_y > 0) {
-                    frontRightMotor.setPower(-.75);
-                    backRightMotor.setPower(-.75);
-                    drive = 1;
-                }
-                //left stick at zero
-                if (gamepad1.right_stick_y == 0)   {
-                    frontLeftMotor.setPower(0);
-                    backLeftMotor.setPower(0);
-                    drive = 0 ;
-
-                }
-
-
             }
 
             if (drive == 0) {
@@ -104,7 +74,7 @@ public class mechtest extends OpMode {
                     frontRightMotor.setPower(.5);
                     backRightMotor.setPower(-.5);
 
-                } else if (gamepad1.dpad_left && !gamepad1.dpad_down && !gamepad1.dpad_up) {
+                } else if (gamepad1.dpad_left) {
                     frontLeftMotor.setPower(-.5);
                     backLeftMotor.setPower(.5);
                     frontRightMotor.setPower(-.5);

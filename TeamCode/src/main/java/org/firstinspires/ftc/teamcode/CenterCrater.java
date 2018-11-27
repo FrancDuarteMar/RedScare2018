@@ -11,17 +11,37 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 public class CenterCrater extends LinearOpMode {
 
+// Initialize motors
 
-    private DcMotor frontLeftMotor =  null;
+       private DcMotor frontLeftMotor =  null;
     private DcMotor frontRightMotor = null;
     private DcMotor backLeftMotor = null;
     private DcMotor backRightMotor = null;
     private DcMotor craneMotor = null;
     private Servo servoMain = null;
     private DcMotor pickupMotor = null;
-    private int craneTop = -3088; //-2729    //old max with string on the front -3191
-    private int craneLow = 0;
-    private int craneLim = -61; //used to be 100
+
+
+    //setting limits
+    private int craneTop = -3088; //-2729    //old max with string on the front -3191 <><><><><><> Will need to fix with new bot
+    private int craneLow = 0; //<><><><><> might not be used depending on crane
+    private int craneLim = -61; //used to be 100 <><><><> Replaces craneLow to avoid straining of the moto
+
+
+    //setting driving system
+    private double diam = 0; //diameter of wheel setting
+    private double circum = (diam * Math.PI); //the circumference of the wheel
+    //ticks per rotation of motor = 1120
+
+
+    private int distance = 0; //distance needed to drive
+    private double drive = (360/circum) * distance; //driving forward
+
+    //declaring motor
+    private double leftForward = frontLeftMotor.getCurrentPosition();
+    private double leftBackward = backLeftMotor.getCurrentPosition();
+    private double rightForward = frontRightMotor.getCurrentPosition();
+    private double rightBackward = backRightMotor.getCurrentPosition();
 
 
 
@@ -41,8 +61,6 @@ public class CenterCrater extends LinearOpMode {
         craneMotor = hardwareMap.get(DcMotor.class, "craneMotor");
         pickupMotor = hardwareMap.get(DcMotor.class, " pickupMotor");
         servoMain = hardwareMap.get(Servo.class, "servoMain");
-
-
 
         frontLeftMotor.setDirection(DcMotor.Direction.REVERSE);
         backLeftMotor.setDirection(DcMotor.Direction.REVERSE);
@@ -102,10 +120,15 @@ public class CenterCrater extends LinearOpMode {
         lower();
 //        liftup(10); //only goes up 3.5
 //        liftup(48.18); //only change the 5
+        forward(5);
+        backward(5);
+
 
 
 
     }
+
+
 
 
     public void lower() {
@@ -168,6 +191,40 @@ public class CenterCrater extends LinearOpMode {
         reset();
     }
 */
+    public void forward(double dF) {
+        reset();
+        dF= drive * dF;
+        while ((frontLeftMotor.getCurrentPosition() < distance ) && (frontRightMotor.getCurrentPosition() < dF)) {
+            frontRightMotor.setPower(.75);
+            backRightMotor.setPower(.75);
+            frontLeftMotor.setPower(.75);
+            backLeftMotor.setPower(.75);
+
+        }
+
+        frontLeftMotor.setPower(0);
+        frontRightMotor.setPower(0);
+        backLeftMotor.setPower(0);
+        backRightMotor.setPower(0);
+        reset();
+
+}
+
+    public void backward( double dF) {
+        reset();
+        dF= drive* dF;
+        while ((frontLeftMotor.getCurrentPosition() < distance ) && (frontRightMotor.getCurrentPosition() < dF)) {
+            frontRightMotor.setPower(-.75);
+            frontLeftMotor.setPower(-.75);
+            backRightMotor.setPower(-.75);
+            backLeftMotor.setPower(-.75);
+        }
+        frontLeftMotor.setPower(0);
+        frontRightMotor.setPower(0);
+        backLeftMotor.setPower(0);
+        backRightMotor.setPower(0);
+        reset();
+    }
 
     public void driveForward(double distance){
         distance = 33.3333 * distance;
