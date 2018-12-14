@@ -34,6 +34,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -41,7 +42,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 /* THIS IS OUR INITIAL CODE FOR AUTONOMOUS. IT IS VERY MESSY AND ALL OVER THE PLACE. THIS SERVES AS A REFERENCE FOR ALL OF OUR AUTONOMOUS CODE */
 
-
+@Disabled
 @Autonomous(name="Basic: Linear OpMode", group="Linear Opmode")
 
 public class BasicOpMode_Linear extends LinearOpMode {
@@ -58,8 +59,10 @@ public class BasicOpMode_Linear extends LinearOpMode {
     private ElapsedTime runtime = new ElapsedTime();
 
 
+
     @Override
     public void runOpMode() {
+
         telemetry.addData("Status", "Initialized");
         telemetry.update();
 

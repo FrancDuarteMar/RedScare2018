@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.ColorSensor;
@@ -11,7 +12,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 // for use with joystick as servo controller
 
-
+@Disabled
 @TeleOp(name="bigBoy_Test", group="bigBoy_Test")
 public class bigBoy_Test extends OpMode {
 

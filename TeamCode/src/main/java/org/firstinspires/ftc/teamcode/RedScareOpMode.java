@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.ColorSensor;
@@ -9,7 +10,7 @@ import com.qualcomm.robotcore.hardware.Gyroscope;
 import com.qualcomm.robotcore.hardware.Servo;
 
 /* MAIN TELEOP TESTING CODE. MESSY WITH MOST OF THE CODE WE USED STORED HERE */
-
+@Disabled
 @TeleOp(name="Red Scare Op Mode", group="Red Scare")
 public class RedScareOpMode extends OpMode {
 

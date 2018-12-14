@@ -2,27 +2,52 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
-@Disabled
-@Autonomous(name="LeftDepot", group="Linear Opmode")
 
-public class LeftDepot extends LinearOpMode {
+import org.firstinspires.ftc.robotcore.external.ClassFactory;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
+import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
+import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 
+import java.util.List;
+
+@Autonomous(name="test", group="Linear Opmode")
+
+public class turn extends LinearOpMode {
+
+// Initialize motors
 
     private DcMotor frontLeftMotor =  null;
     private DcMotor frontRightMotor = null;
     private DcMotor backLeftMotor = null;
     private DcMotor backRightMotor = null;
     private DcMotor craneMotor = null;
-    private Servo servoMain = null;
+    //  private Servo dumpServo = null;
+    //  private Servo dumpServo = null;
     private DcMotor pickupMotor = null;
+
+
+
+    //setting limits
+    private int craneTop = 2992; //old -3088 new 2992
+    private int craneLow = 0;
+    private int craneLim = 50; //old 61
+
+    //var
+    private double pos = 5;
+    private double cent = 30.48;
+
+
 
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
+
+
+
 
 
     @Override
@@ -36,8 +61,7 @@ public class LeftDepot extends LinearOpMode {
         backRightMotor = hardwareMap.get(DcMotor.class, "Back right motor");
         craneMotor = hardwareMap.get(DcMotor.class, "craneMotor");
         pickupMotor = hardwareMap.get(DcMotor.class, " pickupMotor");
-        servoMain = hardwareMap.get(Servo.class, "servoMain");
-
+        // dumpServo = hardwareMap.get(Servo.class, "servoMain");
 
         frontLeftMotor.setDirection(DcMotor.Direction.REVERSE);
         backLeftMotor.setDirection(DcMotor.Direction.REVERSE);
@@ -56,84 +80,86 @@ public class LeftDepot extends LinearOpMode {
         pickupMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         pickupMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-        // Initialize the hardware variables. Note that the strings used here as parameters
-        // to 'get' must correspond to the names assigned during the robot configuration
-        // step (using the FTC Robot Controller app on the phone).
-
-        // Most robots need the motor on one side to be reversed to drive forward
-        // Reverse the motor that runs backwards when connected directly to the battery
-
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
         runtime.reset();
 
 
-        //turn(TYPE I DEGREES;
+        //turn(TYPE In DEGREES;
         //driveForward(TYPE IN CENTIMETERS);
+        //driveBackward(TYPE IN CENTIMETERS IN -);
+
+
+        //TEST CODE HERE\\
 
 
 
-        //drive for left, start at depot
 
 
-        turn(-30);
-        driveForward(95);
-        driveForward(35);
-        turn(45);
-        driveForward(60);
-        turn(90);
-        servoMain.setPosition(-1);
-        servoMain.setPosition(1);
-        driveForward(250);
+
+sLeft(20);
+//turn(-90);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
     }
 
-    public void drop(double drop){
-        drop = 20.83125 * drop;
-        while(frontLeftMotor.getCurrentPosition() < drop && craneMotor.getCurrentPosition() < drop){
 
-            craneMotor.setPower(.75);
-            pickupMotor.setPower(-.75);
+    //CRANE//
 
+    public void drop(){
+        while (craneMotor.getCurrentPosition() > craneTop) {
+
+//one if positive, the other negative. Test with "Main Test Bed" code
+            craneMotor.setPower(1);                            //for one motor named craneMotor
+            //pickupMotor.setPower(-1);                            //for 2 motors, 2nd called pickupMotor,
         }
+
+        //stops the lift system
         craneMotor.setPower(0);
-        pickupMotor.setPower(0);
-        reset();
+        //pickupMotor.setPower(0);                                //for 2 motors
     }
 
-    public void liftup(double lift){
-        lift = 20.83125 * lift;
-        while(pickupMotor.getCurrentPosition() < lift && craneMotor.getCurrentPosition() < lift){
 
-            craneMotor.setPower(.75);
-            pickupMotor.setPower(.75);
+    public void lift() {
+        while (craneMotor.getCurrentPosition() < craneLim) {
+
+            craneMotor.setPower(-1);
+            //pickupMotor.setPower(-1); //for 2 motors
         }
+
         craneMotor.setPower(0);
-        pickupMotor.setPower(0);
-        reset();
+        //pickupMotor.setPower(0); //for 2 motors
     }
 
-/*
-    public void lift(double lift){
-        lift = 20.83125 * lift;
-        while(frontLeftMotor.getCurrentPosition() < lift && craneMotor.getCurrentPosition() < lift){
-
-            craneMotor.setPower(-.75);
-            pickupMotor.setPower(.75);
 
 
-        }
-        craneMotor.setPower(0);
-        pickupMotor.setPower(0);
-        reset();
-    }
-*/
 
-    public void driveForward(double distance){
-        distance = 33.3333 * distance;
-        while(frontLeftMotor.getCurrentPosition() < distance && frontRightMotor.getCurrentPosition() < distance){
+    // DRIVING //
+
+    // DRIVING //
+
+
+    public void driveForward(double distance) {
+        distance = 34.3333 * distance;
+        while (frontLeftMotor.getCurrentPosition() < distance && frontRightMotor.getCurrentPosition() < distance && opModeIsActive()) {
 
             frontRightMotor.setPower(.75);
             backRightMotor.setPower(.75);
@@ -146,9 +172,11 @@ public class LeftDepot extends LinearOpMode {
         backLeftMotor.setPower(0);
         reset();
     }
-    public void driveBackward(double distance){
-        distance = 33.3333 * distance;
-        while(frontLeftMotor.getCurrentPosition() > distance && frontRightMotor.getCurrentPosition() > distance){
+
+
+    public void driveBackward(double distance) {
+        distance = 34.3333 * distance;
+        while (frontLeftMotor.getCurrentPosition() > distance && frontRightMotor.getCurrentPosition() > distance && opModeIsActive()) {
 
             frontRightMotor.setPower(-.75);
             backRightMotor.setPower(-.75);
@@ -161,10 +189,52 @@ public class LeftDepot extends LinearOpMode {
         backLeftMotor.setPower(0);
         reset();
     }
-    public void turn(double degrees){
-        degrees = 9.5 * degrees;
-        if(degrees > 0) {
-            while (frontLeftMotor.getCurrentPosition() < degrees && frontRightMotor.getCurrentPosition() < degrees) {
+
+
+    // STRAFE // ** Might need to use * .707 to the dist **
+
+    public void sLeft(double dist) {
+        dist = (34.33 * dist);
+
+        while ((frontLeftMotor.getCurrentPosition() > dist) && ((Math.abs(backRightMotor.getCurrentPosition())) > dist) && opModeIsActive()) {
+
+            frontLeftMotor.setPower(.5);
+            backRightMotor.setPower(-.5);
+            frontRightMotor.setPower(.5);
+            backRightMotor.setPower(-.5);
+        }
+
+        frontLeftMotor.setPower(0);
+        backRightMotor.setPower(0);
+        frontRightMotor.setPower(0);
+        backRightMotor.setPower(0);
+    }
+
+
+    public void sRight(double dist) {
+        dist = (34.33 * dist);
+
+        while (((Math.abs(frontLeftMotor.getCurrentPosition())) > dist) && (backRightMotor.getCurrentPosition() > dist) && opModeIsActive()) {
+
+            frontLeftMotor.setPower(-.5);
+            backLeftMotor.setPower(.5);
+            frontRightMotor.setPower(-.5);
+            backRightMotor.setPower(.5);
+        }
+
+        frontLeftMotor.setPower(0);
+        backRightMotor.setPower(0);
+        frontRightMotor.setPower(0);
+        backRightMotor.setPower(0);
+    }
+
+
+    // TURN //
+
+    public void turn(double degrees) {
+        degrees = 17.5 * degrees; //9.5 old , 19 is too much
+        if (degrees > 0) {
+            while (frontLeftMotor.getCurrentPosition() < degrees && frontRightMotor.getCurrentPosition() < degrees && opModeIsActive()) {
 
                 frontRightMotor.setPower(-.35);
                 backRightMotor.setPower(-.35);
@@ -172,9 +242,9 @@ public class LeftDepot extends LinearOpMode {
                 backLeftMotor.setPower(.35);
             }
         }
-        if(degrees < 0) {
-            degrees*=-1;
-            while (frontLeftMotor.getCurrentPosition() < degrees && frontRightMotor.getCurrentPosition() < degrees) {
+        if (degrees < 0) {
+            degrees *= -1;
+            while (frontLeftMotor.getCurrentPosition() < degrees && frontRightMotor.getCurrentPosition() < degrees && opModeIsActive()) {
 
                 frontRightMotor.setPower(.35);
                 backRightMotor.setPower(.35);
@@ -188,6 +258,10 @@ public class LeftDepot extends LinearOpMode {
         backLeftMotor.setPower(0);
         reset();
     }
+
+
+    // RESET ENCODER //
+
     public void reset() {
         backLeftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         backRightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -198,37 +272,9 @@ public class LeftDepot extends LinearOpMode {
         frontLeftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         frontRightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
+
 }
 
-    /*public void height(double degrees){
-        degrees = 9.5 * degrees;
-        if(degrees > 0) {
-            while (craneMotor.AgetCurrentPosition() < degrees) {
-
-                craneMotor.setPower(-.35);
-
-            }
-        }
-        if(degrees < 0) {
-            degrees*=-1;
-            while (craneMotor.getCurrentPosition() < degrees) {
-
-                craneMotor.setPower(.35);
-
-            }
-        }
-        frontRightMotor.setPower(0);
-        backRightMotor.setPower(0);
-        frontLeftMotor.setPower(0);
-        backLeftMotor.setPower(0);
-        craneReset();
-    }
-    public void craneReset() {
-        craneMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        craneMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-    }
-}*/
 
 
 //1000 ticks = 30cm
@@ -239,8 +285,39 @@ public class LeftDepot extends LinearOpMode {
 //turn -90 = left
 //driveBackward needs negative
 
+//how to use servo
+//servoMain.setPosition(value);
 
 //Begin Vision
 
-//how to use servo
-//servoMain.setPosition(value);
+
+// VISION //
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

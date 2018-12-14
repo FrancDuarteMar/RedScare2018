@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.ColorSensor;
@@ -11,7 +12,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 /* FOR TEST BED */
 
 
-
+@Disabled
 @TeleOp(name="Main Test bed ", group="Red Scare")
 public class Test_Bed_Main extends OpMode {
 
@@ -57,7 +58,7 @@ public class Test_Bed_Main extends OpMode {
         pickupMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         pickupMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-        telemetry.addData("encodervalue:", craneMotor.getCurrentPosition());
+        telemetry.addData("Crane encodervalue:", craneMotor.getCurrentPosition());
         telemetry.update();
 
         //craneMotor.isBusy();
