@@ -138,7 +138,7 @@ public class autoDepotTheory extends LinearOpMode {
             driveForward(1.2 * cent);        //goes forward
             turn(-45);         //turns toward mineral
             driveForward(3 * cent);         //knocks mineral
-            turn(105);          //turns towards depot (old 75)
+            turn(95);          //turns towards depot (old 75)
             driveForward(4 * cent); //goes into depot
             //turn(30 );
             //driveForward(80);
