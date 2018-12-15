@@ -19,7 +19,7 @@ public class mechtest extends OpMode {
         private DcMotor craneMotor = null;
         private float drive = 0;
 
-        private double speed = 1.25;
+        private double speed = 1.05;
 
 
     //setting limits
@@ -134,7 +134,7 @@ public class mechtest extends OpMode {
 
             // REGULAR //
             if (gamepad1.a) {
-                speed = 1.25;
+                speed = 1.05;
             }
 
             // SLOW //

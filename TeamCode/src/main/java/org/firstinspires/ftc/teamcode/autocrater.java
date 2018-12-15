@@ -106,10 +106,12 @@ public class autocrater extends LinearOpMode {
         //driveForward(TYPE IN CENTIMETERS);
         //driveBackward(TYPE IN CENTIMETERS IN -);
 
+        dumpServo.setPosition(.75);
         drop();
         driveForward(10);
         lift();
         driveBackward(10);
+
         vision();
 
 
@@ -117,25 +119,25 @@ public class autocrater extends LinearOpMode {
             turn(-90);
             driveForward(1.2 * cent);
             turn(45);
-            driveForward(2.1 * cent);
-            driveBackward(-1.9 * cent);
-            turn(-45);
-            claimpark();
+            driveForward(2.5 * cent);
+            //driveBackward(-1.9 * cent);
+            //turn(-45);
+            //claimpark();
         }
         else if (pos == 0) { //CENTER
             turn(-90);
             driveForward(1.2 * cent);
-            driveForward(2.84 * cent);
-            driveBackward(-2.88 * cent);
-            claimpark();
+            driveForward(3 * cent);
+//            driveBackward(-2.88 * cent);
+//            claimpark();
         }
         else { //LEFT
             turn(-90);
             driveForward(1.2 * cent);
             turn(-45);
-            driveForward(2.1 * cent);
-            driveBackward(-1.9 * cent);
-            claimpark();
+            driveForward(2.5 * cent);
+//            driveBackward(-1.9 * cent);
+//            claimpark();
 
             }
         }

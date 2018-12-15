@@ -17,9 +17,9 @@ import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 
 import java.util.List;
 
-@Autonomous(name="Auto Mech Depot Theory", group="Linear Opmode")
+@Autonomous(name="Auto Mech Depot Theory Dirty", group="Linear Opmode")
 
-public class autoDepotTheory extends LinearOpMode {
+public class AutoDirty extends LinearOpMode {
 
 
 // Initialize motors
@@ -127,7 +127,7 @@ public class autoDepotTheory extends LinearOpMode {
         } else if (pos == 0) { //CENTER
             turn(-90);
             driveForward(5.75 * cent);
-            turn(40); //40
+            turn(35);
             //driveForward(.2 * cent);
             servoSet();
             // turn(10);
@@ -140,13 +140,13 @@ public class autoDepotTheory extends LinearOpMode {
             driveForward(3 * cent);
             turn(75);
             driveForward(4.5 * cent);
-            turn(20 );
+            turn(-20 );
             //driveForward(80);
             //turn(20);
             servoSet();
             //turn(-90);
-            //driveForward(8.5);
-            driveBackward(-8.5 * cent);
+            driveForward(8.5);
+//            driveBackward(-8.5 * cent);
 
         }
     }
