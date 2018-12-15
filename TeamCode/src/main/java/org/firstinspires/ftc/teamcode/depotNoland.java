@@ -17,9 +17,9 @@ import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 
 import java.util.List;
 
-@Autonomous(name="Auto Mech Depot Theory", group="Linear Opmode")
+@Autonomous(name="Auto Mech Depot no land", group="Linear Opmode")
 
-public class autoDepotTheory extends LinearOpMode {
+public class depotNoland extends LinearOpMode {
 
 
 // Initialize motors
@@ -107,17 +107,17 @@ public class autoDepotTheory extends LinearOpMode {
 
 
         dumpServo.setPosition(.75);
-        drop();
-        driveForward(10);
-        lift();
-        driveBackward(-10);
+       // drop();
+        //driveForward(10);
+        //lift();
+        //driveBackward(-10);
         vision();
 
         if (pos == 1) { //RIGHT
             turn(-90);
             driveForward(1.2 * cent);
             turn(45);
-            driveForward( 4 * cent);
+            driveForward(3.5 * cent);
             turn(-90);
             driveForward(3.7 * cent);
             servoSet();
@@ -135,18 +135,18 @@ public class autoDepotTheory extends LinearOpMode {
 
         } else { //LEFT
             turn(-90);
-            driveForward(1.2 * cent);        //goes forward
-            turn(-45);         //turns toward mineral
-            driveForward(3 * cent);         //knocks mineral
-            turn(105);          //turns towards depot (old 75)
-            driveForward(4 * cent); //goes into depot
-            //turn(30 );
+            driveForward(1.2 * cent);
+            turn(-45);
+            driveForward(3 * cent);
+            turn(75);
+            driveForward(4.5 * cent);
+            turn(20 );
             //driveForward(80);
             //turn(20);
-            servoSet(); //drops token
+            servoSet();
             //turn(-90);
             //driveForward(8.5);
-            driveBackward(-8.5 * cent); //goes backward into crater
+            driveBackward(-8.5 * cent);
 
         }
     }
