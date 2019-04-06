@@ -1,48 +1,89 @@
 
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.AutoIMUTests;
 
+import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.vuforia.CameraDevice;
+
+import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+
+import org.firstinspires.ftc.robotcore.external.Func;
+import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
+import org.firstinspires.ftc.robotcore.external.navigation.Position;
+import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
+
+import java.util.Locale;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
+import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 
 import java.util.List;
+@Disabled
+@Autonomous(name="Gyro Test 10", group="Linear Opmode")
 
-@Autonomous(name="Mech DROP ONLY", group="Linear Opmode")
+public class Gyrotest extends LinearOpMode {
 
-public class drop extends LinearOpMode {
 
 // Initialize motors
 
-    private DcMotor frontLeftMotor =  null;
+
+    // GYRO //
+    BNO055IMU imu;
+
+
+    Orientation angles;
+    Acceleration gravity;
+
+
+    // HARDWARE //
+
+    private DcMotor frontLeftMotor = null;
     private DcMotor frontRightMotor = null;
     private DcMotor backLeftMotor = null;
     private DcMotor backRightMotor = null;
     private DcMotor craneMotor = null;
-    // private Servo dumpServo = null;
-//    private DcMotor pickupMotor = null;
-
+    private Servo dumpServo = null;
 
 
     //setting limits
-    private int craneTop = 2100 ; //4000 // new rev 2500; old 3000
-    private int craneLim = 200;
+    private int craneTop = 2992;
+    private int craneLow = 0;
+    private int craneLim = 50;
+
+     // GYRO \\
+    public float heading = 0;
+    Orientation lastAngles = new Orientation();
+
+    double globalAngle, power = .30, correction;
+
+
+
+
     //var
     private double pos = -2;
     private double cent = 30.48;
 
 
-
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
-
 
 
     //VISION
@@ -58,9 +99,9 @@ public class drop extends LinearOpMode {
     private TFObjectDetector tfod;
 
 
-
     @Override
     public void runOpMode() {
+
         telemetry.addData("Status", "Initialized");
         telemetry.update();
 
@@ -69,8 +110,7 @@ public class drop extends LinearOpMode {
         backLeftMotor = hardwareMap.get(DcMotor.class, "Back left motor");
         backRightMotor = hardwareMap.get(DcMotor.class, "Back right motor");
         craneMotor = hardwareMap.get(DcMotor.class, "craneMotor");
-       // pickupMotor = hardwareMap.get(DcMotor.class, " pickupMotor");
-        //dumpServo = hardwareMap.get(Servo.class, "servoMain");
+        dumpServo = hardwareMap.get(Servo.class, "servoMain");
 
         frontLeftMotor.setDirection(DcMotor.Direction.REVERSE);
         backLeftMotor.setDirection(DcMotor.Direction.REVERSE);
@@ -86,135 +126,57 @@ public class drop extends LinearOpMode {
 
         craneMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         craneMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-      //  pickupMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-       // pickupMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+
+        // GYRO //
+
+        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+        parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
+        parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
+        parameters.calibrationDataFile = "BNO055IMUCalibration.json"; // see the calibration sample opmode
+        parameters.loggingEnabled = true;
+        parameters.loggingTag = "IMU";
+        parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
+
+
+        imu = hardwareMap.get(BNO055IMU.class, "imu");
+        imu.initialize(parameters);
+
+
+
+        composeTelemetry();
+
+        imu.startAccelerationIntegration(new Position(), new Velocity(), 1000);
+
 
 
         // Wait for the game to start (driver presses PLAY)
+        initVuforia();
+
         waitForStart();
+
+        while (opModeIsActive()) {
+            telemetry.update();
+        }
+
         runtime.reset();
+
 
 
         //turn(TYPE In DEGREES;
         //driveForward(TYPE IN CENTIMETERS);
         //driveBackward(TYPE IN CENTIMETERS IN -);
 
-
-        //drive for middle; start at crater
-
-
-        drop();
-        driveForward(10);
-        lift();
-        driveBackward(-10);
-        /*
-        drop();
-        turn(-10);
-        driveBackward(-10);
-        turn(10);
-        driveForward(10);
-        turn(180 );
-        driveForward(62);
-        driveBackward(-62); //end of middle specific code
-        driveForward(35);
-        turn(-80);
-        driveForward(125);
-        turn(-45);
-        driveForward(140);
-        servoMain.setPosition(-1);
-        servoMain.setPosition(1);
-        driveBackward(-260);
-
-*/
+        //ACROSS = 2.82
 
 
-        //if same measurements
 
-
-        // VISION //
-
-// The TFObjectDetector uses the camera frames from the VuforiaLocalizer, so we create that
-        // first.
-
-/*
-        drop();
-        driveForward(10);
-        lift();
-        driveBackward(-10);
-        vision();
-
-        if (pos == -1) {
-//                drop();
-//                driveForward(10);
-//                lift();
-//                driveBackward(-10);
-            turn(-90);
-            driveForward(1.5 * cent);
-            turn(35);
-            driveForward(2 * cent);
-            driveBackward(-2 * cent);
-            turn(-35);
-            driveForward(.5 * cent);
-            turn(-90);
-            driveForward(2.5 * cent);
-            turn(110);
-            driveForward(4 * cent);
-            turn(90);
-            driveForward(4.5 * cent);
-            //dumpServo.setPosition(-1);
-            driveBackward(-7.5 * cent);
-
-        } else if (pos == 0) {
-//                drop();
-//                driveForward(10);
-//                lift();
-//                driveBackward(-10);
-            turn(-90);
-            driveForward(3.5 * cent);
-            driveBackward(-1.5 * cent);
-            turn(-90);
-            driveForward(2.5 * cent);
-            turn(110);
-            driveForward(4 * cent);
-            turn(90);
-            driveForward(4.5 * cent);
-            //dumpServo.setPosition(-1);
-            driveBackward(-7.5 * cent);
-
-        } else {
-//                drop();
-//                driveForward(10);
-//                lift();
-//                driveBackward(-10);
-            turn(-90);
-            driveForward(1.5 * cent);
-            turn(-35);
-            driveForward(2 * cent);
-            driveBackward(-2 * cent);
-            turn(35);
-            driveForward(.5 * cent);
-            turn(-90);
-            driveForward(2.5 * cent);
-            turn(110);
-            driveForward(4 * cent);
-            turn(90);
-            driveForward(4.5 * cent);
-            //dumpServo.setPosition(-1);
-            driveBackward(-7.5 * cent);
-        }
-    }
-
-*/
     }
 
 
     // VISION//
 
-    public void vision (){
-
-        initVuforia();
-
-
+    public void vision() {
 
 
         if (tfod != null) {
@@ -240,6 +202,9 @@ public class drop extends LinearOpMode {
 
             if (tfod != null) {
                 while (pos == -2 && opModeIsActive()) {
+
+                    CameraDevice.getInstance().setFlashTorchMode(true);
+
                     // getUpdatedRecognitions() will return null if no new information is available since
                     // the last time that call was made.
                     List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
@@ -263,14 +228,21 @@ public class drop extends LinearOpMode {
                                     telemetry.addData("Gold Mineral Position", "Left");
                                     pos = -1;
                                     tfod.shutdown();
+                                    CameraDevice.getInstance().setFlashTorchMode(false);
+
+
                                 } else if (goldMineralX > silverMineral1X && goldMineralX > silverMineral2X) {
                                     telemetry.addData("Gold Mineral Position", "Right");
                                     pos = 1;
                                     tfod.shutdown();
+                                    CameraDevice.getInstance().setFlashTorchMode(false);
+
                                 } else {
                                     telemetry.addData("Gold Mineral Position", "Center");
                                     pos = 0;
                                     tfod.shutdown();
+                                    CameraDevice.getInstance().setFlashTorchMode(false);
+
 
                                 }
                             }
@@ -281,9 +253,6 @@ public class drop extends LinearOpMode {
             }
         }
     }
-
-
-
 
 
     private void initVuforia() {
@@ -302,7 +271,6 @@ public class drop extends LinearOpMode {
     }
 
 
-
     private void initTfod() {
         int tfodMonitorViewId = hardwareMap.appContext.getResources().getIdentifier(
                 "tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName());
@@ -312,55 +280,37 @@ public class drop extends LinearOpMode {
     }
 
 
-
-
-
-
-
-
-
-
     //CRANE//
 
-    public void drop(){
-        while (craneMotor.getCurrentPosition() < craneTop) {
+    public void drop() {
+        while (craneMotor.getCurrentPosition() < craneTop && opModeIsActive()) {
 
 //one if positive, the other negative. Test with "Main Test Bed" code
-            craneMotor.setPower(1);                            //for one motor named craneMotor
-            //pickupMotor.setPower(-1);                            //for 2 motors, 2nd called pickupMotor,
+            craneMotor.setPower(.75);                            //for one motor named craneMotor
         }
 
         //stops the lift system
         craneMotor.setPower(0);
-        //pickupMotor.setPower(0);                                //for 2 motors
+
     }
 
 
     public void lift() {
-        while (craneMotor.getCurrentPosition() > craneLim) {
+        while (craneMotor.getCurrentPosition() > craneLim && opModeIsActive()) {
 
             craneMotor.setPower(-1);
-            //pickupMotor.setPower(-1); //for 2 motors
         }
 
         craneMotor.setPower(0);
-        //pickupMotor.setPower(0); //for 2 motors
     }
-
-
-
-
-
-
-
 
 
     // DRIVING //
 
 
-    public void driveForward(double distance){
-        distance = 33.3333 * distance;
-        while(frontLeftMotor.getCurrentPosition() < distance && frontRightMotor.getCurrentPosition() < distance){
+    public void driveForward(double distance) {
+        distance = 34.3333 * distance;
+        while (frontLeftMotor.getCurrentPosition() < distance && frontRightMotor.getCurrentPosition() < distance && opModeIsActive()) {
 
             frontRightMotor.setPower(.75);
             backRightMotor.setPower(.75);
@@ -375,9 +325,9 @@ public class drop extends LinearOpMode {
     }
 
 
-    public void driveBackward(double distance){
-        distance = 33.3333 * distance;
-        while(frontLeftMotor.getCurrentPosition() > distance && frontRightMotor.getCurrentPosition() > distance){
+    public void driveBackward(double distance) {
+        distance = 34.3333 * distance;
+        while (frontLeftMotor.getCurrentPosition() > distance && frontRightMotor.getCurrentPosition() > distance && opModeIsActive()) {
 
             frontRightMotor.setPower(-.75);
             backRightMotor.setPower(-.75);
@@ -392,15 +342,12 @@ public class drop extends LinearOpMode {
     }
 
 
-
-
-
     // STRAFE // ** Might need to use * .707 to the dist **
 
-    public void sLeft (double dist) {
-        dist = (33.33 * dist);
+    public void sLeft(double dist) {
+        dist = (34.33 * dist);
 
-        while ((frontLeftMotor.getCurrentPosition() > dist ) && ((Math.abs(backRightMotor.getCurrentPosition())) > dist)) {
+        while ((frontLeftMotor.getCurrentPosition() > dist) && ((Math.abs(backRightMotor.getCurrentPosition())) > dist) && opModeIsActive()) {
 
             frontLeftMotor.setPower(.5);
             backRightMotor.setPower(-.5);
@@ -415,10 +362,10 @@ public class drop extends LinearOpMode {
     }
 
 
-    public void sRight (double dist) {
-        dist = (33.33 * dist);
+    public void sRight(double dist) {
+        dist = (34.33 * dist);
 
-        while (((Math.abs(frontLeftMotor.getCurrentPosition())) > dist ) && (backRightMotor.getCurrentPosition() > dist)) {
+        while (((Math.abs(frontLeftMotor.getCurrentPosition())) > dist) && (backRightMotor.getCurrentPosition() > dist) && opModeIsActive()) {
 
             frontLeftMotor.setPower(-.5);
             backLeftMotor.setPower(.5);
@@ -433,13 +380,12 @@ public class drop extends LinearOpMode {
     }
 
 
-
     // TURN //
 
-    public void turn(double degrees){
-        degrees = 9.5 * degrees;
-        if(degrees > 0) {
-            while (frontLeftMotor.getCurrentPosition() < degrees && frontRightMotor.getCurrentPosition() < degrees) {
+    public void turn(double degrees) {
+        degrees = 17.5 * degrees; //9.5 old , 19 is too much
+        if (degrees > 0) {
+            while (frontLeftMotor.getCurrentPosition() < degrees && frontRightMotor.getCurrentPosition() < degrees && opModeIsActive()) {
 
                 frontRightMotor.setPower(-.35);
                 backRightMotor.setPower(-.35);
@@ -447,9 +393,9 @@ public class drop extends LinearOpMode {
                 backLeftMotor.setPower(.35);
             }
         }
-        if(degrees < 0) {
-            degrees*=-1;
-            while (frontLeftMotor.getCurrentPosition() < degrees && frontRightMotor.getCurrentPosition() < degrees) {
+        if (degrees < 0) {
+            degrees *= -1;
+            while (frontLeftMotor.getCurrentPosition() < degrees && frontRightMotor.getCurrentPosition() < degrees && opModeIsActive()) {
 
                 frontRightMotor.setPower(.35);
                 backRightMotor.setPower(.35);
@@ -465,9 +411,6 @@ public class drop extends LinearOpMode {
     }
 
 
-
-
-
     // RESET ENCODER //
 
     public void reset() {
@@ -480,9 +423,97 @@ public class drop extends LinearOpMode {
         frontLeftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         frontRightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
+
+
+    public void servoSet() {
+        dumpServo.setPosition(.1);
+    }
+
+
+    void composeTelemetry() {
+
+        // At the beginning of each telemetry update, grab a bunch of data
+        // from the IMU that we will then display in separate lines.
+        telemetry.addAction(new Runnable() {
+            @Override
+            public void run() {
+                // Acquiring the angles is relatively expensive; we don't want
+                // to do that in each of the three items that need that info, as that's
+                // three times the necessary expense.
+                angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+                gravity = imu.getGravity();
+            }
+        });
+
+        telemetry.addLine()
+                .addData("status", new Func<String>() {
+                    @Override
+                    public String value() {
+                        return imu.getSystemStatus().toShortString();
+                    }
+                })
+                .addData("calib", new Func<String>() {
+                    @Override
+                    public String value() {
+                        return imu.getCalibrationStatus().toString();
+                    }
+                });
+
+        telemetry.addLine()
+                .addData("heading", new Func<String>() {
+                    @Override
+                    public String value() {
+                        return formatAngle(angles.angleUnit, angles.firstAngle);
+
+                    }
+                })
+                .addData("roll", new Func<String>() {
+                    @Override
+                    public String value() {
+                        return formatAngle(angles.angleUnit, angles.secondAngle);
+                    }
+                })
+                .addData("pitch", new Func<String>() {
+                    @Override
+                    public String value() {
+                        return formatAngle(angles.angleUnit, angles.thirdAngle);
+                    }
+                });
+
+        telemetry.addLine()
+                .addData("grvty", new Func<String>() {
+                    @Override
+                    public String value() {
+                        return gravity.toString();
+                    }
+                })
+                .addData("mag", new Func<String>() {
+                    @Override
+                    public String value() {
+                        return String.format(Locale.getDefault(), "%.3f",
+                                Math.sqrt(gravity.xAccel * gravity.xAccel
+                                        + gravity.yAccel * gravity.yAccel
+                                        + gravity.zAccel * gravity.zAccel));
+                    }
+                });
+    }
+
+    String formatAngle(AngleUnit angleUnit, double angle) {
+        return formatDegrees(AngleUnit.DEGREES.fromUnit(angleUnit, angle));
+    }
+
+    String formatDegrees(double degrees) {
+        return String.format(Locale.getDefault(), "%.1f", AngleUnit.DEGREES.normalize(degrees));
+        }
+
+
+
+
+
+
+
+
 }
-
-
 
 //1000 ticks = 30cm
 //1000/30= 33.33

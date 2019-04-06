@@ -1,8 +1,10 @@
 
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.AMTwoIMU;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -13,36 +15,38 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 
+
+
 import java.util.List;
+@Disabled
+@Autonomous(name="Auto Mech Depot", group="Linear Opmode")
 
-@Autonomous(name="Mech DROP ONLY", group="Linear Opmode")
+public class autodepot extends LinearOpMode {
 
-public class drop extends LinearOpMode {
 
 // Initialize motors
 
-    private DcMotor frontLeftMotor =  null;
+    private DcMotor frontLeftMotor = null;
     private DcMotor frontRightMotor = null;
     private DcMotor backLeftMotor = null;
     private DcMotor backRightMotor = null;
     private DcMotor craneMotor = null;
-    // private Servo dumpServo = null;
-//    private DcMotor pickupMotor = null;
+    private Servo dumpServo = null;
 
 
 
     //setting limits
-    private int craneTop = 2100 ; //4000 // new rev 2500; old 3000
-    private int craneLim = 200;
+    private int craneTop = 2992;
+    private int craneLow = 0;
+    private int craneLim = 50;
+
     //var
     private double pos = -2;
     private double cent = 30.48;
 
 
-
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
-
 
 
     //VISION
@@ -58,9 +62,9 @@ public class drop extends LinearOpMode {
     private TFObjectDetector tfod;
 
 
-
     @Override
     public void runOpMode() {
+
         telemetry.addData("Status", "Initialized");
         telemetry.update();
 
@@ -69,8 +73,7 @@ public class drop extends LinearOpMode {
         backLeftMotor = hardwareMap.get(DcMotor.class, "Back left motor");
         backRightMotor = hardwareMap.get(DcMotor.class, "Back right motor");
         craneMotor = hardwareMap.get(DcMotor.class, "craneMotor");
-       // pickupMotor = hardwareMap.get(DcMotor.class, " pickupMotor");
-        //dumpServo = hardwareMap.get(Servo.class, "servoMain");
+        dumpServo = hardwareMap.get(Servo.class, "servoMain");
 
         frontLeftMotor.setDirection(DcMotor.Direction.REVERSE);
         backLeftMotor.setDirection(DcMotor.Direction.REVERSE);
@@ -86,11 +89,12 @@ public class drop extends LinearOpMode {
 
         craneMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         craneMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-      //  pickupMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-       // pickupMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
 
 
         // Wait for the game to start (driver presses PLAY)
+        initVuforia();
+
         waitForStart();
         runtime.reset();
 
@@ -100,121 +104,55 @@ public class drop extends LinearOpMode {
         //driveBackward(TYPE IN CENTIMETERS IN -);
 
 
-        //drive for middle; start at crater
 
-
-        drop();
-        driveForward(10);
-        lift();
-        driveBackward(-10);
-        /*
-        drop();
-        turn(-10);
-        driveBackward(-10);
-        turn(10);
-        driveForward(10);
-        turn(180 );
-        driveForward(62);
-        driveBackward(-62); //end of middle specific code
-        driveForward(35);
-        turn(-80);
-        driveForward(125);
-        turn(-45);
-        driveForward(140);
-        servoMain.setPosition(-1);
-        servoMain.setPosition(1);
-        driveBackward(-260);
-
-*/
-
-
-        //if same measurements
-
-
-        // VISION //
-
-// The TFObjectDetector uses the camera frames from the VuforiaLocalizer, so we create that
-        // first.
-
-/*
         drop();
         driveForward(10);
         lift();
         driveBackward(-10);
         vision();
 
-        if (pos == -1) {
-//                drop();
-//                driveForward(10);
-//                lift();
-//                driveBackward(-10);
+        if (pos == 1) { //RIGHT
             turn(-90);
-            driveForward(1.5 * cent);
-            turn(35);
-            driveForward(2 * cent);
-            driveBackward(-2 * cent);
-            turn(-35);
-            driveForward(.5 * cent);
+            driveForward(1.2 * cent);
+            turn(45);
+            driveForward(2.2 * cent);
             turn(-90);
-            driveForward(2.5 * cent);
-            turn(110);
-            driveForward(4 * cent);
-            turn(90);
-            driveForward(4.5 * cent);
-            //dumpServo.setPosition(-1);
-            driveBackward(-7.5 * cent);
+            driveForward(3.8 * cent);
+            servoSet();
+            turn(-90);
+            driveForward(8.5 * cent);
+            //driveBackward(-8.5 * cent);
+        } else if (pos == 0) { //CENTER
 
-        } else if (pos == 0) {
-//                drop();
-//                driveForward(10);
-//                lift();
-//                driveBackward(-10);
             turn(-90);
-            driveForward(3.5 * cent);
-            driveBackward(-1.5 * cent);
-            turn(-90);
-            driveForward(2.5 * cent);
-            turn(110);
-            driveForward(4 * cent);
-            turn(90);
-            driveForward(4.5 * cent);
-            //dumpServo.setPosition(-1);
-            driveBackward(-7.5 * cent);
+            driveForward(5.7 * cent);
+            turn(30);
+            driveForward(.2 * cent);
+            servoSet();
+           // turn(10);
+            driveBackward(-8 * cent);
 
-        } else {
-//                drop();
-//                driveForward(10);
-//                lift();
-//                driveBackward(-10);
+        } else { //LEFT
             turn(-90);
-            driveForward(1.5 * cent);
-            turn(-35);
-            driveForward(2 * cent);
-            driveBackward(-2 * cent);
-            turn(35);
-            driveForward(.5 * cent);
-            turn(-90);
-            driveForward(2.5 * cent);
-            turn(110);
-            driveForward(4 * cent);
+            driveForward(1.2 * cent);
+            turn(-45);
+            driveForward(3 * cent);
             turn(90);
             driveForward(4.5 * cent);
-            //dumpServo.setPosition(-1);
-            driveBackward(-7.5 * cent);
+            //driveForward(80);
+            //turn(20);
+            servoSet();
+            driveBackward(-8.5 * cent);
+
         }
     }
 
-*/
-    }
+
 
 
     // VISION//
 
-    public void vision (){
-
-        initVuforia();
-
-
+    public void vision() {
 
 
         if (tfod != null) {
@@ -283,9 +221,6 @@ public class drop extends LinearOpMode {
     }
 
 
-
-
-
     private void initVuforia() {
         /*
          * Configure Vuforia by creating a Parameter object, and passing it to the Vuforia engine.
@@ -302,7 +237,6 @@ public class drop extends LinearOpMode {
     }
 
 
-
     private void initTfod() {
         int tfodMonitorViewId = hardwareMap.appContext.getResources().getIdentifier(
                 "tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName());
@@ -312,55 +246,36 @@ public class drop extends LinearOpMode {
     }
 
 
-
-
-
-
-
-
-
-
     //CRANE//
 
-    public void drop(){
-        while (craneMotor.getCurrentPosition() < craneTop) {
+    public void drop() {
+        while (craneMotor.getCurrentPosition() < craneTop && opModeIsActive()) {
 
 //one if positive, the other negative. Test with "Main Test Bed" code
-            craneMotor.setPower(1);                            //for one motor named craneMotor
-            //pickupMotor.setPower(-1);                            //for 2 motors, 2nd called pickupMotor,
+            craneMotor.setPower(.75);                            //for one motor named craneMotor
         }
 
         //stops the lift system
         craneMotor.setPower(0);
-        //pickupMotor.setPower(0);                                //for 2 motors
     }
 
 
     public void lift() {
-        while (craneMotor.getCurrentPosition() > craneLim) {
+        while (craneMotor.getCurrentPosition() > craneLim && opModeIsActive()) {
 
             craneMotor.setPower(-1);
-            //pickupMotor.setPower(-1); //for 2 motors
         }
 
         craneMotor.setPower(0);
-        //pickupMotor.setPower(0); //for 2 motors
     }
-
-
-
-
-
-
-
 
 
     // DRIVING //
 
 
-    public void driveForward(double distance){
-        distance = 33.3333 * distance;
-        while(frontLeftMotor.getCurrentPosition() < distance && frontRightMotor.getCurrentPosition() < distance){
+    public void driveForward(double distance) {
+        distance = 34.3333 * distance;
+        while (frontLeftMotor.getCurrentPosition() < distance && frontRightMotor.getCurrentPosition() < distance && opModeIsActive()) {
 
             frontRightMotor.setPower(.75);
             backRightMotor.setPower(.75);
@@ -375,9 +290,9 @@ public class drop extends LinearOpMode {
     }
 
 
-    public void driveBackward(double distance){
-        distance = 33.3333 * distance;
-        while(frontLeftMotor.getCurrentPosition() > distance && frontRightMotor.getCurrentPosition() > distance){
+    public void driveBackward(double distance) {
+        distance = 34.3333 * distance;
+        while (frontLeftMotor.getCurrentPosition() > distance && frontRightMotor.getCurrentPosition() > distance && opModeIsActive()) {
 
             frontRightMotor.setPower(-.75);
             backRightMotor.setPower(-.75);
@@ -392,15 +307,12 @@ public class drop extends LinearOpMode {
     }
 
 
-
-
-
     // STRAFE // ** Might need to use * .707 to the dist **
 
-    public void sLeft (double dist) {
-        dist = (33.33 * dist);
+    public void sLeft(double dist) {
+        dist = (34.33 * dist);
 
-        while ((frontLeftMotor.getCurrentPosition() > dist ) && ((Math.abs(backRightMotor.getCurrentPosition())) > dist)) {
+        while ((frontLeftMotor.getCurrentPosition() > dist) && ((Math.abs(backRightMotor.getCurrentPosition())) > dist) && opModeIsActive()) {
 
             frontLeftMotor.setPower(.5);
             backRightMotor.setPower(-.5);
@@ -415,10 +327,10 @@ public class drop extends LinearOpMode {
     }
 
 
-    public void sRight (double dist) {
-        dist = (33.33 * dist);
+    public void sRight(double dist) {
+        dist = (34.33 * dist);
 
-        while (((Math.abs(frontLeftMotor.getCurrentPosition())) > dist ) && (backRightMotor.getCurrentPosition() > dist)) {
+        while (((Math.abs(frontLeftMotor.getCurrentPosition())) > dist) && (backRightMotor.getCurrentPosition() > dist) && opModeIsActive()) {
 
             frontLeftMotor.setPower(-.5);
             backLeftMotor.setPower(.5);
@@ -433,13 +345,12 @@ public class drop extends LinearOpMode {
     }
 
 
-
     // TURN //
 
-    public void turn(double degrees){
-        degrees = 9.5 * degrees;
-        if(degrees > 0) {
-            while (frontLeftMotor.getCurrentPosition() < degrees && frontRightMotor.getCurrentPosition() < degrees) {
+    public void turn(double degrees) {
+        degrees = 17.5 * degrees; //9.5 old , 19 is too much
+        if (degrees > 0) {
+            while (frontLeftMotor.getCurrentPosition() < degrees && frontRightMotor.getCurrentPosition() < degrees && opModeIsActive()) {
 
                 frontRightMotor.setPower(-.35);
                 backRightMotor.setPower(-.35);
@@ -447,9 +358,9 @@ public class drop extends LinearOpMode {
                 backLeftMotor.setPower(.35);
             }
         }
-        if(degrees < 0) {
-            degrees*=-1;
-            while (frontLeftMotor.getCurrentPosition() < degrees && frontRightMotor.getCurrentPosition() < degrees) {
+        if (degrees < 0) {
+            degrees *= -1;
+            while (frontLeftMotor.getCurrentPosition() < degrees && frontRightMotor.getCurrentPosition() < degrees && opModeIsActive()) {
 
                 frontRightMotor.setPower(.35);
                 backRightMotor.setPower(.35);
@@ -465,9 +376,6 @@ public class drop extends LinearOpMode {
     }
 
 
-
-
-
     // RESET ENCODER //
 
     public void reset() {
@@ -480,8 +388,12 @@ public class drop extends LinearOpMode {
         frontLeftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         frontRightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
-}
 
+
+    public void servoSet() {
+        dumpServo.setPosition(.1);
+    }
+}
 
 
 //1000 ticks = 30cm
@@ -498,7 +410,7 @@ public class drop extends LinearOpMode {
 //Begin Vision
 
 
-// VISION //
+    // VISION //
 
 
 
