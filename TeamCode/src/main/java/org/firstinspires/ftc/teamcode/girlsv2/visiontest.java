@@ -132,7 +132,7 @@ public class visiontest extends LinearOpMode {
 //    private double spoolMin = -130;
 
 
-    private double spoolMax = -3550;
+    private double spoolMax = 3550;
     private double spoolMin = 0;
 
 

@@ -233,7 +233,7 @@ public class MechanicatsAutoDepotV1 extends LinearOpMode {
         telemetry.update();
 
 
-        //drop();
+        drop();
 
         //fixheading= (modernRoboticsI2cGyro.getIntegratedZValue());
 
@@ -243,9 +243,9 @@ public class MechanicatsAutoDepotV1 extends LinearOpMode {
 //        modernRoboticsI2cGyro.resetZAxisIntegrator();
 //        robotHeading = 0;
 
-//        turn(-15);
-//        liftLower();
-//        turn(15);
+        turn(-15);
+        liftLower();
+        turn(15);
 
 
 //        while (robotHeading != 0 ){
